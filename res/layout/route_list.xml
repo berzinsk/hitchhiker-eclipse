@@ -8,6 +8,27 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".RouteList" >
     
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:id="@+id/no_list" >
+        
+    	<LinearLayout
+        	android:id="@+id/list_content"
+        	style="@style/no_stores_content" >
+
+        	<ImageView
+            	android:id="@+id/list_logo2"
+            	style="@style/list_no_stores" />
+
+        	<TextView
+            	android:id="@+id/list_text2"
+            	style="@style/list_text2" />
+
+    	</LinearLayout>
+     </RelativeLayout>
+    
     <com.handmark.pulltorefresh.library.PullToRefreshListView
     	android:id="@+id/list_list"
     	android:layout_height="fill_parent"

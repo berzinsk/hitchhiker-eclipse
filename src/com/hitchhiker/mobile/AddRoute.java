@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.beardedhen.bbutton.BootstrapButton;
 import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
@@ -17,13 +19,13 @@ public class AddRoute extends Activity {
 	EditText routeTo;
 	EditText price;
 	EditText departureTime;
-	Button saveButton;
+	BootstrapButton saveButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_route);
-		Parse.initialize(this, "IfqZO5qsBYS8vsGh0XwqKbpuhndnIihhrOhgVTxK", "2Q2jMF3PlbIgvjuRbfA3aAbj0x9CDqyO3UcOcfCq");
+//		Parse.initialize(this, "IfqZO5qsBYS8vsGh0XwqKbpuhndnIihhrOhgVTxK", "2Q2jMF3PlbIgvjuRbfA3aAbj0x9CDqyO3UcOcfCq");
 		initializeFields();
 		
 		saveButton.setOnClickListener(new View.OnClickListener() {
@@ -32,12 +34,13 @@ public class AddRoute extends Activity {
 			public void onClick(View v) {
 				
 				ParseObject route = new ParseObject("Routes");
-				route.put("user", "Karlis Berzins");
+				route.put("user", ParseUser.getCurrentUser().getUsername());
 				route.put("routeFrom", routeFrom.getText().toString());
 				route.put("routeTo", routeTo.getText().toString());
 				route.put("distance", 104L);
 				route.put("price", Double.valueOf(price.getText().toString()));
 				route.put("departureTime", departureTime.getText().toString());
+				route.put("createdBy", ParseUser.getCurrentUser());
 				
 				route.saveInBackground();
 				
@@ -59,7 +62,7 @@ public class AddRoute extends Activity {
 		routeTo = (EditText) findViewById(R.id.driving_to_field);
 		price = (EditText) findViewById(R.id.price_field);
 		departureTime = (EditText) findViewById(R.id.departure_time_field);
-		saveButton = (Button) findViewById(R.id.save_button);
+		saveButton = (BootstrapButton) findViewById(R.id.save_button);
 	}
 
 }

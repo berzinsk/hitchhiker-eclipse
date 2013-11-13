@@ -2,7 +2,7 @@ package com.hitchhiker.mobile.objects;
 
 public class Route {
 	
-	private Long id;
+	private String id;
 	private String user;
 	private String routeFrom;
 	private String routeTo;
@@ -13,16 +13,22 @@ public class Route {
 	public Route() {
 	}
 	
-	public Route(Long id) {
+	public Route(String id) {
 		this.id = id;
 	}
 	
-	public Route(Long id, String user) {
+	public Route(String id, String user) {
 		this.id = id;
 		this.user = user;
 	}
 	
-	public synchronized Route setId(Long id) {
+	public Route(String id, String routeFrom, String routeTo) {
+		this.id = id;
+		this.routeFrom = routeFrom;
+		this.routeTo = routeTo;
+	}
+	
+	public synchronized Route setId(String id) {
 		this.id = id;
 		return this;
 	}
@@ -57,7 +63,7 @@ public class Route {
 		return this;
 	}
 	
-	public synchronized Long getId() {
+	public synchronized String getId() {
 		return this.id;
 	}
 	
