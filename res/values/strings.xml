@@ -15,5 +15,11 @@
     <string name="departure_time">Departure time</string>
     <string name="save">Save</string>
     <string name="title_activity_route_view">RouteView</string>
+    <string name="from">From: </string>
+    <string name="to">To: </string>
+    <string name="date">Date: </string>
+    <string name="time">Time: </string>
+    <string name="seats">Seats: </string>
+    <string name="price_tag">Price: </string>
 
 </resources>

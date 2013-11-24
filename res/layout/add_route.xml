@@ -80,9 +80,8 @@
         android:layout_marginTop="30dp"
         android:text="@string/departure_time" />
 
-    <EditText
-        android:id="@+id/departure_time_field"
-        android:background="@drawable/edittext_background_rounded"
+    <Button
+        android:id="@+id/time_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/departure_time"
@@ -94,14 +93,13 @@
         android:id="@+id/save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/departure_time_field"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp"
+        android:layout_marginBottom="31dp"
         android:text="saveeeeeeeeeeee"
         androidbootstrap:roundedCorners="true"
         androidbootstrap:size="default"
         androidbootstrap:type="primary" >
-
     </com.beardedhen.bbutton.BootstrapButton>
 
 </RelativeLayout>

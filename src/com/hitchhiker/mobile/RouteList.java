@@ -3,6 +3,7 @@ package com.hitchhiker.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beardedhen.bbutton.BootstrapButton;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -29,6 +30,8 @@ import android.widget.Toast;
 
 public class RouteList extends Activity {
 	
+	BootstrapButton addRoute;
+	
 	public API api;
 	
 	private PullToRefreshListView pullToRefreshView;
@@ -46,6 +49,15 @@ public class RouteList extends Activity {
 		}
 		
 		setContentView(R.layout.route_list);
+		
+		addRoute = (BootstrapButton) findViewById(R.id.addRoute);
+		addRoute.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(RouteList.this, AddRoute.class));
+			}
+		});
 		
 		pullToRefreshView = (PullToRefreshListView) findViewById(R.id.list_list);
 		pullToRefreshView.setOnRefreshListener(new OnRefreshListener<ListView>() {
