@@ -5,7 +5,10 @@ import java.util.Arrays;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -32,6 +35,12 @@ public class AuthorizationView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.authorization);
 		ParseAnalytics.trackAppOpened(getIntent());
+		
+		SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
+		if (prefs.contains("userObjectId")) {
+			startActivity(new Intent(AuthorizationView.this, RouteList.class));
+		}
+		
 		authorize = (BootstrapButton) findViewById(R.id.authorization);
 		
 		authorize.setOnClickListener(new View.OnClickListener() {
@@ -58,33 +67,24 @@ public class AuthorizationView extends Activity {
 	
 	private void facebookLogin() {
 		
-		ParseFacebookUtils.logIn(Arrays.asList("email", Permissions.User.EMAIL), this, new LogInCallback() {
+		ParseFacebookUtils.logIn(Arrays.asList("email", Permissions.User.EMAIL, Permissions.User.ABOUT_ME), this, new LogInCallback() {
 			
 			@Override
 			public void done(ParseUser user, ParseException err) {
 				if (user == null) {
 					Log.d("No useeed", "No useeer");
 				} else if (user.isNew()) {
-					user.add("email", user.getEmail());
+					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
+					editor.putString("userObjectId", user.getObjectId());
+					editor.commit();
 					startActivity(new Intent(AuthorizationView.this, RouteList.class));
 				} else {
+					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
+					editor.putString("userObjectId", user.getObjectId());
+					editor.commit();
 					startActivity(new Intent(AuthorizationView.this, RouteList.class));
 				}
 			}
 		});
-		
-//		ParseFacebookUtils.logIn(this, new LogInCallback() {
-//			
-//			@Override
-//			public void done(ParseUser user, ParseException err) {
-//				if (user == null) {
-//					Log.d("No useeed", "No useeer");
-//				} else if (user.isNew()) {
-//					startActivity(new Intent(AuthorizationView.this, RouteList.class));
-//				} else {
-//					startActivity(new Intent(AuthorizationView.this, RouteList.class));
-//				}
-//			}
-//		});
 	}
 }

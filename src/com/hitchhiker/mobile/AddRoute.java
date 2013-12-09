@@ -4,12 +4,14 @@ import java.util.Calendar;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
@@ -20,17 +22,24 @@ import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 public class AddRoute extends Activity {
-	static final int TIME_DIALOG_ID = 1111;
+	static final int TIME_DIALOG_ID = 1000;
+	static final int DATE_DIALOG_ID = 999;
 	
 	EditText routeFrom;
 	EditText routeTo;
 	EditText price;
+	EditText seats;
 	Button departureTimeButton;
+	Button departureDateButton;
 	BootstrapButton saveButton;
 	String departureTime;
+	String departureDate;
 	
 	private int hour;
     private int minute;
+    private int year;
+    private int month;
+    private int day;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +54,27 @@ public class AddRoute extends Activity {
 			public void onClick(View v) {
 				
 				ParseObject route = new ParseObject("Routes");
-				route.put("user", ParseUser.getCurrentUser().getUsername());
 				route.put("routeFrom", routeFrom.getText().toString());
 				route.put("routeTo", routeTo.getText().toString());
 				route.put("distance", 104L);
 				route.put("departureTime", getDepartureTime());
+				route.put("departureDate", getDepartureDate());
 				route.put("price", Double.valueOf(price.getText().toString()));
-				route.put("createdBy", ParseUser.getCurrentUser());
-				route.put("availableSeats", 4);
+				route.put("creator", ParseUser.getCurrentUser());
+				route.put("availableSeats", Integer.parseInt(seats.getText().toString()));
 				
 				route.saveInBackground();
 				
 				Intent routeList = new Intent(AddRoute.this, RouteList.class);
 				startActivity(routeList);
+			}
+		});
+		
+		departureDateButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showDialog(DATE_DIALOG_ID);
 			}
 		});
 		
@@ -72,12 +89,19 @@ public class AddRoute extends Activity {
 	
 	@Override
     protected Dialog onCreateDialog(int id) {
+		Calendar c = Calendar.getInstance();
         switch (id) {
         case TIME_DIALOG_ID:
-             
-            // set time picker as current time
+            hour = c.get(Calendar.HOUR_OF_DAY);
+            minute = c.get(Calendar.MINUTE);
             return new TimePickerDialog(this, timePickerListener, hour, minute,
                     false);
+            
+        case DATE_DIALOG_ID:
+        	year = c.get(Calendar.YEAR);
+        	month = c.get(Calendar.MONTH);
+        	day = c.get(Calendar.DAY_OF_MONTH);
+        	return new DatePickerDialog(this, datePickerListener, year, month, day);
  
         }
         return null;
@@ -93,6 +117,16 @@ public class AddRoute extends Activity {
          }
  
     };
+    
+    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+		
+		@Override
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			setDepartureDate(String.valueOf(dayOfMonth + "." + monthOfYear + "." + year));
+			departureDateButton.setText(String.valueOf(dayOfMonth + "." + monthOfYear + "." + year));
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,15 +141,26 @@ public class AddRoute extends Activity {
 		price = (EditText) findViewById(R.id.price_field);
 		departureTimeButton = (Button) findViewById(R.id.time_select);
 		saveButton = (BootstrapButton) findViewById(R.id.save_button);
+		departureDateButton = (Button) findViewById(R.id.date_select);
+		seats = (EditText) findViewById(R.id.seats);
 	}
 	
 	private String getDepartureTime() {
 		return departureTime;
 	}
 	
+	private String getDepartureDate() {
+		return departureDate;
+	}
+	
 	private String setDepartureTime(String departureTime) {
 		this.departureTime = departureTime;
 		return this.departureTime;
+	}
+	
+	private String setDepartureDate(String departureDate) {
+		this.departureDate = departureDate;
+		return this.departureDate;
 	}
 	
 	private static String convert(int c) {

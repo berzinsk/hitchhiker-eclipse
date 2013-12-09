@@ -120,8 +120,16 @@ public class API {
 			if (data.has("departureTime")) {
 				route.setDepartureTime(data.getString("departureTime"));
 			}
+			
+			if (data.has("departureDate")) {
+				route.setDepartureDate(data.getString("departureDate"));
+			}
+			
+			if (data.has("availableSeats")) {
+				route.setAvailableSeats(data.getInt("availableSeats"));
+			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		return route;

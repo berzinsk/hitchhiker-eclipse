@@ -9,35 +9,58 @@
     tools:context=".RouteView" >
 
     <TextView
-        android:id="@+id/route_from"
+        android:id="@+id/route_to_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/route_from_view"
+        android:layout_alignBottom="@+id/route_from_view"
+        android:layout_marginLeft="78dp"
+        android:layout_toRightOf="@+id/route_from_view"
+        android:text="@string/to" />
+
+    <TextView
+        android:id="@+id/route_from_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/from" />
 
     <TextView
-        android:id="@+id/route_to"
+        android:id="@+id/departure_time_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/route_from"
-        android:layout_below="@+id/route_from"
-        android:layout_marginTop="29dp" />
+        android:layout_alignLeft="@+id/route_to_view"
+        android:layout_below="@+id/route_to_view"
+        android:layout_marginTop="53dp"
+        android:text="@string/time" />
 
     <TextView
-        android:id="@+id/price"
+        android:id="@+id/departure_date_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/route_to"
-        android:layout_below="@+id/route_to"
-        android:layout_marginTop="38dp" />
+        android:layout_alignBaseline="@+id/departure_time_view"
+        android:layout_alignBottom="@+id/departure_time_view"
+        android:layout_alignLeft="@+id/route_from_view"
+        android:text="@string/date" />
 
     <TextView
-        android:id="@+id/departure_time"
+        android:id="@+id/price_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/price"
-        android:layout_below="@+id/price"
-        android:layout_marginTop="24dp" />
+        android:layout_alignLeft="@+id/departure_time_view"
+        android:layout_below="@+id/departure_time_view"
+        android:layout_marginTop="35dp"
+        android:text="@string/price_tag" />
+
+    <TextView
+        android:id="@+id/seats_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/price_view"
+        android:layout_alignLeft="@+id/departure_date_view"
+        android:text="@string/seats" />
 
 </RelativeLayout>

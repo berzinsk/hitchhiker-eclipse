@@ -33,6 +33,7 @@ public class GetRouteList extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPostExecute(Void result) {
+		view.progressDialog.dismiss();
 		view.updateUi(view.routes);
 	}
 	

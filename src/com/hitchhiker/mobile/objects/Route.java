@@ -3,12 +3,14 @@ package com.hitchhiker.mobile.objects;
 public class Route {
 	
 	private String id;
-	private String user;
+	private String creator;
 	private String routeFrom;
 	private String routeTo;
 	private Long distance;
 	private Double price;
 	private String departureTime;
+	private String departureDate;
+	private int availableSeats;
 	
 	public Route() {
 	}
@@ -17,9 +19,9 @@ public class Route {
 		this.id = id;
 	}
 	
-	public Route(String id, String user) {
+	public Route(String id, String creator) {
 		this.id = id;
-		this.user = user;
+		this.creator = creator;
 	}
 	
 	public Route(String id, String routeFrom, String routeTo) {
@@ -33,8 +35,8 @@ public class Route {
 		return this;
 	}
 	
-	public synchronized Route setUser(String user) {
-		this.user = user;
+	public synchronized Route setUser(String creator) {
+		this.creator = creator;
 		return this;
 	}
 	
@@ -63,12 +65,22 @@ public class Route {
 		return this;
 	}
 	
+	public synchronized Route setDepartureDate(String departureDate) {
+		this.departureDate = departureDate;
+		return this;
+	}
+	
+	public synchronized Route setAvailableSeats(int availableSeats) {
+		this.availableSeats = availableSeats;
+		return this;
+	}
+	
 	public synchronized String getId() {
 		return this.id;
 	}
 	
 	public synchronized String getUser() {
-		return this.user;
+		return this.creator;
 	}
 	
 	public synchronized String getRouteFrom() {
@@ -89,5 +101,13 @@ public class Route {
 	
 	public synchronized String getDepartureTime() {
 		return this.departureTime;
+	}
+	
+	public synchronized String getDepartureDate() {
+		return this.departureDate;
+	}
+	
+	public synchronized int getAvailableSeats() {
+		return this.availableSeats;
 	}
 }

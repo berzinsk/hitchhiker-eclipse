@@ -25,6 +25,7 @@ public class GetRouteDetails extends AsyncTask<Void, Void, Void> {
 	}
 	
 	protected void onPostExecute(Void result) {
+		view.progressDialog.dismiss();
 		view.updateUI(this.route);
 	}
 	

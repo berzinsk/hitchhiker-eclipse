@@ -18,8 +18,8 @@ import com.parse.ParseUser;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +37,7 @@ public class RouteList extends Activity {
 	private PullToRefreshListView pullToRefreshView;
 	public AsyncTask<Void, Void, Void> getRouteList;
 	public List<Route> routes = new ArrayList<Route>();
+	public ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,11 @@ public class RouteList extends Activity {
 		}
 		
 		setContentView(R.layout.route_list);
+		
+		progressDialog = ProgressDialog.show(RouteList.this, null, getResources().getString(R.string.loading), true);
+		progressDialog.setCancelable(true);
+		
+		getRouteList();
 		
 		addRoute = (BootstrapButton) findViewById(R.id.addRoute);
 		addRoute.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +107,6 @@ public class RouteList extends Activity {
 	}
 	
 	public void updateUi(List<Route> routes) {
-		Log.d("Points", String.valueOf(routes));
 		pullToRefreshView.onRefreshComplete();
 		if (routes == null) {
 			findViewById(R.id.list_list).setVisibility(View.GONE);
