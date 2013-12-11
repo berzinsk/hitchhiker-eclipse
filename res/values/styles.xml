@@ -18,7 +18,6 @@
     </style>
     
     <style name="no_stores_content">
-		<item name="android:background">#ececec</item>
 		<item name="android:padding">7dp</item>
 		<item name="android:orientation">vertical</item>
 		<item name="android:layout_height">wrap_content</item>

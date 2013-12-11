@@ -3,7 +3,8 @@ package com.hitchhiker.mobile.objects;
 public class Route {
 	
 	private String id;
-	private String creator;
+	private String authorId;
+	private String authorName;
 	private String routeFrom;
 	private String routeTo;
 	private Long distance;
@@ -19,9 +20,9 @@ public class Route {
 		this.id = id;
 	}
 	
-	public Route(String id, String creator) {
+	public Route(String id, String authorId) {
 		this.id = id;
-		this.creator = creator;
+		this.authorId = authorId;
 	}
 	
 	public Route(String id, String routeFrom, String routeTo) {
@@ -30,13 +31,33 @@ public class Route {
 		this.routeTo = routeTo;
 	}
 	
+	public Route(String id, String routeFrom, String routeTo, String authorId) {
+		this.id = id;
+		this.routeFrom = routeFrom;
+		this.routeTo = routeTo;
+		this.authorId = authorId;
+	}
+	
+	public Route(String id, String routeFrom, String routeTo, String authorId, String authorName) {
+		this.id = id;
+		this.routeFrom = routeFrom;
+		this.routeTo = routeTo;
+		this.authorId = authorId;
+		this.authorName = authorName;
+	}
+	
 	public synchronized Route setId(String id) {
 		this.id = id;
 		return this;
 	}
 	
-	public synchronized Route setUser(String creator) {
-		this.creator = creator;
+	public synchronized Route setAuthorId(String authorId) {
+		this.authorId = authorId;
+		return this;
+	}
+	
+	public synchronized Route setAuthorName(String authorName) {
+		this.authorName = authorName;
 		return this;
 	}
 	
@@ -79,8 +100,12 @@ public class Route {
 		return this.id;
 	}
 	
-	public synchronized String getUser() {
-		return this.creator;
+	public synchronized String getAuthorId() {
+		return this.authorId;
+	}
+	
+	public synchronized String getAuthorName() {
+		return this.authorName;
 	}
 	
 	public synchronized String getRouteFrom() {

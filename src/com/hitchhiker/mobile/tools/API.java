@@ -16,8 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.hitchhiker.mobile.objects.Route;
+import com.parse.ParseUser;
 
 import android.app.Activity;
+import android.util.Log;
 
 public class API {
 	private static final String APPLICATION_ID = "IfqZO5qsBYS8vsGh0XwqKbpuhndnIihhrOhgVTxK";
@@ -71,7 +73,11 @@ public class API {
 			}
 			
 			for (int i = 0; i < data.length(); i++) {
-				route = new Route(data.getJSONObject(i).getString("objectId"), data.getJSONObject(i).getString("routeFrom"), data.getJSONObject(i).getString("routeTo"));
+				route = new Route(data.getJSONObject(i).getString("objectId"),
+						data.getJSONObject(i).getString("routeFrom"),
+						data.getJSONObject(i).getString("routeTo"),
+						data.getJSONObject(i).getString("authorId"),
+						data.getJSONObject(i).getString("authorName"));
 				routes.add(route);
 			}
 		} catch (Exception e) {
@@ -97,8 +103,12 @@ public class API {
 				return null;
 			}
 			
-			if (data.has("user")) {
-				route.setUser(data.getString("user"));
+			if (data.has("authorId")) {
+				route.setAuthorId(data.getString("authorId"));
+			}
+			
+			if (data.has("authorName")) {
+				route.setAuthorName(data.getString("authorName"));
 			}
 			
 			if (data.has("routeFrom")) {

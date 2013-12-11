@@ -2,6 +2,7 @@ package com.hitchhiker.mobile.adapters;
 
 import java.util.List;
 
+import com.facebook.widget.ProfilePictureView;
 import com.hitchhiker.mobile.R;
 import com.hitchhiker.mobile.objects.Route;
 
@@ -53,6 +54,8 @@ public class RouteListAdapter extends BaseAdapter {
 		if (view == null) {
 			tag = new Tag();
 			view = inflater.inflate(R.layout.row_01, null);
+			tag.authorPicture = (ProfilePictureView) view.findViewById(R.id.row_profilePicture);
+			tag.authorName = (TextView) view.findViewById(R.id.row_name);
 			tag.routeFrom = (TextView) view.findViewById(R.id.row_routeFrom);
 			tag.routeTo = (TextView) view.findViewById(R.id.row_routeTo);
 			view.setTag(tag);
@@ -60,12 +63,16 @@ public class RouteListAdapter extends BaseAdapter {
 			tag = (Tag) view.getTag();
 		}
 		
+		tag.authorPicture.setProfileId(routes.get(index).getAuthorId());
+		tag.authorName.setText(routes.get(index).getAuthorName());
 		tag.routeFrom.setText(routes.get(index).getRouteFrom());
 		tag.routeTo.setText(routes.get(index).getRouteTo());
 		return view;
 	}
 	
 	private static class Tag {
+		ProfilePictureView authorPicture;
+		TextView authorName;
 		TextView routeFrom;
 		TextView routeTo;
 	}
