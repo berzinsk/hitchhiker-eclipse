@@ -4,6 +4,8 @@ import com.crashlytics.android.Crashlytics;
 import java.security.acl.Permission;
 import java.util.Arrays;
 
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -38,7 +40,7 @@ public class AuthorizationView extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Crashlytics.start(this);
+//		Crashlytics.start(this);
 		setContentView(R.layout.authorization);
 		ParseAnalytics.trackAppOpened(getIntent());
 		
@@ -97,8 +99,20 @@ public class AuthorizationView extends Activity {
 				@Override
 				public void onCompleted(GraphUser user, Response response) {
 					if (user != null) {
-						ParseUser.getCurrentUser().put("fbName", user.getName());
-						ParseUser.getCurrentUser().saveInBackground();
+						JSONObject userProfile = new JSONObject();
+						
+						try {
+							Log.d("Stradaaa", "Stradaaaa");
+							userProfile.put("facebookId", user.getId());
+							userProfile.put("name", user.getName());
+							ParseUser currentUser = ParseUser.getCurrentUser();
+							currentUser.put("profile", userProfile);
+							currentUser.saveInBackground();
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+//						ParseUser.getCurrentUser().put("fbName", user.getName());
+//						ParseUser.getCurrentUser().saveInBackground();
 					}
 				}
 			});

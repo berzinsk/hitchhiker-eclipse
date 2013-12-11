@@ -16,8 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.hitchhiker.mobile.objects.Route;
+import com.parse.ParseUser;
 
 import android.app.Activity;
+import android.util.Log;
 
 public class API {
 	private static final String APPLICATION_ID = "IfqZO5qsBYS8vsGh0XwqKbpuhndnIihhrOhgVTxK";
@@ -97,8 +99,8 @@ public class API {
 				return null;
 			}
 			
-			if (data.has("user")) {
-				route.setUser(data.getString("user"));
+			if (data.has("creatorName")) {
+				route.setAuthor(data.getString("creatorName"));
 			}
 			
 			if (data.has("routeFrom")) {

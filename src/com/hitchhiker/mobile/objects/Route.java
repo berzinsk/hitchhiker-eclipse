@@ -3,7 +3,7 @@ package com.hitchhiker.mobile.objects;
 public class Route {
 	
 	private String id;
-	private String creator;
+	private String author;
 	private String routeFrom;
 	private String routeTo;
 	private Long distance;
@@ -19,9 +19,9 @@ public class Route {
 		this.id = id;
 	}
 	
-	public Route(String id, String creator) {
+	public Route(String id, String author) {
 		this.id = id;
-		this.creator = creator;
+		this.author = author;
 	}
 	
 	public Route(String id, String routeFrom, String routeTo) {
@@ -30,13 +30,20 @@ public class Route {
 		this.routeTo = routeTo;
 	}
 	
+	public Route(String id, String routeFrom, String routeTo, String author) {
+		this.id = id;
+		this.routeFrom = routeFrom;
+		this.routeTo = routeTo;
+		this.author = author;
+	}
+	
 	public synchronized Route setId(String id) {
 		this.id = id;
 		return this;
 	}
 	
-	public synchronized Route setUser(String creator) {
-		this.creator = creator;
+	public synchronized Route setAuthor(String author) {
+		this.author = author;
 		return this;
 	}
 	
@@ -79,8 +86,8 @@ public class Route {
 		return this.id;
 	}
 	
-	public synchronized String getUser() {
-		return this.creator;
+	public synchronized String getAuthor() {
+		return this.author;
 	}
 	
 	public synchronized String getRouteFrom() {

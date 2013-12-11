@@ -64,8 +64,6 @@ public class RouteView extends Activity {
 		
 		TextView availableSeats = (TextView) findViewById(R.id.seats_view);
 		availableSeats.append(String.valueOf(route.getAvailableSeats()));
-		
-		
 	}
 
 }

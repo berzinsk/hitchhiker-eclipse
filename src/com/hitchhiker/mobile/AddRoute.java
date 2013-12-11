@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -61,6 +62,7 @@ public class AddRoute extends Activity {
 				route.put("departureDate", getDepartureDate());
 				route.put("price", Double.valueOf(price.getText().toString()));
 				route.put("creator", ParseUser.getCurrentUser());
+//				route.put("creatorName", ParseUser.getCurrentUser().getString("fbName"));
 				route.put("availableSeats", Integer.parseInt(seats.getText().toString()));
 				
 				route.saveInBackground();
