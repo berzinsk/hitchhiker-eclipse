@@ -73,7 +73,11 @@ public class API {
 			}
 			
 			for (int i = 0; i < data.length(); i++) {
-				route = new Route(data.getJSONObject(i).getString("objectId"), data.getJSONObject(i).getString("routeFrom"), data.getJSONObject(i).getString("routeTo"));
+				route = new Route(data.getJSONObject(i).getString("objectId"),
+						data.getJSONObject(i).getString("routeFrom"),
+						data.getJSONObject(i).getString("routeTo"),
+						data.getJSONObject(i).getString("authorId"),
+						data.getJSONObject(i).getString("authorName"));
 				routes.add(route);
 			}
 		} catch (Exception e) {
@@ -99,8 +103,12 @@ public class API {
 				return null;
 			}
 			
-			if (data.has("creatorName")) {
-				route.setAuthor(data.getString("creatorName"));
+			if (data.has("authorId")) {
+				route.setAuthorId(data.getString("authorId"));
+			}
+			
+			if (data.has("authorName")) {
+				route.setAuthorName(data.getString("authorName"));
 			}
 			
 			if (data.has("routeFrom")) {

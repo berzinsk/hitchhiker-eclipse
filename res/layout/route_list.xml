@@ -33,26 +33,9 @@
     	
     	<com.handmark.pulltorefresh.library.PullToRefreshListView
     		android:id="@+id/list_list"
-    		android:background="#0098FF"
+    		android:background="#FFF"
     		android:layout_height="match_parent"
     		android:layout_width="match_parent" >
     	</com.handmark.pulltorefresh.library.PullToRefreshListView>
      </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/icons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:background="#000" >
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button" />
-    </LinearLayout>
-
 </RelativeLayout>

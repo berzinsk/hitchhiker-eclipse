@@ -63,8 +63,8 @@ public class RouteListAdapter extends BaseAdapter {
 			tag = (Tag) view.getTag();
 		}
 		
-		tag.authorPicture.setProfileId("100000930704817");
-		tag.authorName.setText("Karlis Berzins");
+		tag.authorPicture.setProfileId(routes.get(index).getAuthorId());
+		tag.authorName.setText(routes.get(index).getAuthorName());
 		tag.routeFrom.setText(routes.get(index).getRouteFrom());
 		tag.routeTo.setText(routes.get(index).getRouteTo());
 		return view;

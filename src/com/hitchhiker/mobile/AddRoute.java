@@ -2,6 +2,8 @@ package com.hitchhiker.mobile;
 
 import java.util.Calendar;
 
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -61,8 +63,8 @@ public class AddRoute extends Activity {
 				route.put("departureTime", getDepartureTime());
 				route.put("departureDate", getDepartureDate());
 				route.put("price", Double.valueOf(price.getText().toString()));
-				route.put("creator", ParseUser.getCurrentUser());
-//				route.put("creatorName", ParseUser.getCurrentUser().getString("fbName"));
+				route.put("authorId", userFacebookId());
+				route.put("authorName", userFacebookName());
 				route.put("availableSeats", Integer.parseInt(seats.getText().toString()));
 				
 				route.saveInBackground();
@@ -87,6 +89,36 @@ public class AddRoute extends Activity {
 				showDialog(TIME_DIALOG_ID);
 			}
 		});
+	}
+	
+	private String userFacebookId() {
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if (currentUser.get("profile") != null) {
+			JSONObject userProfile = currentUser.getJSONObject("profile");
+			try {
+				if (userProfile.getString("facebookId") != null) {
+					return userProfile.getString("facebookId").toString();
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+	
+	private String userFacebookName() {
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if (currentUser.get("profile") != null) {
+			JSONObject userProfile = currentUser.getJSONObject("profile");
+			try {
+				if (userProfile.getString("name") != null) {
+					return userProfile.getString("name").toString();
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
 	}
 	
 	@Override
