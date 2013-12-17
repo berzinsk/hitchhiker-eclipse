@@ -3,12 +3,18 @@ package com.hitchhiker.mobile;
 import com.hitchhiker.mobile.asynctasks.GetRouteDetails;
 import com.hitchhiker.mobile.objects.Route;
 import com.hitchhiker.mobile.tools.API;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class RouteView extends Activity {
@@ -17,6 +23,7 @@ public class RouteView extends Activity {
 	public Route route;
 	public AsyncTask<Void, Void, Void> getRouteDetails;
 	public ProgressDialog progressDialog;
+	private Button joinRoute;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,15 @@ public class RouteView extends Activity {
 		route = ((Hitchhiker) this.getApplicationContext()).getRoute();
 		
 		getRouteDetails = new GetRouteDetails(this).execute();
+		
+		joinRoute = (Button) findViewById(R.id.join);
+		joinRoute.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				joinRoute();
+			}
+		});
 	}
 
 	@Override
@@ -64,6 +80,20 @@ public class RouteView extends Activity {
 		
 		TextView availableSeats = (TextView) findViewById(R.id.seats_view);
 		availableSeats.append(String.valueOf(route.getAvailableSeats()));
+	}
+	
+	private void joinRoute() {
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Routes");
+		
+		query.getInBackground(route.getId(), new GetCallback<ParseObject>() {
+			
+			@Override
+			public void done(ParseObject route, ParseException e) {
+				if (e == null) {
+					
+				}
+			}
+		});
 	}
 
 }

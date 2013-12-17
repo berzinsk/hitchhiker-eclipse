@@ -9,6 +9,7 @@ import com.hitchhiker.mobile.objects.Route;
 import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.nfc.Tag;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,8 +57,12 @@ public class RouteListAdapter extends BaseAdapter {
 			view = inflater.inflate(R.layout.row_01, null);
 			tag.authorPicture = (ProfilePictureView) view.findViewById(R.id.row_profilePicture);
 			tag.authorName = (TextView) view.findViewById(R.id.row_name);
+			Typeface font = Typeface.createFromAsset(activity.getAssets(), "fonts/CharisSILI.ttf");
+			tag.authorName.setTypeface(font);
 			tag.routeFrom = (TextView) view.findViewById(R.id.row_routeFrom);
+			tag.routeFrom.setTypeface(font);
 			tag.routeTo = (TextView) view.findViewById(R.id.row_routeTo);
+			tag.routeTo.setTypeface(font);
 			view.setTag(tag);
 		} else {
 			tag = (Tag) view.getTag();
