@@ -30,12 +30,14 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseFacebookUtils.Permissions;
 import com.parse.ParseObject;
 import com.parse.ParseInstallation;
+import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
 import com.parse.PushService;
 
 public class AuthorizationView extends Activity {
 	
-	BootstrapButton authorize;
+	BootstrapButton facebookLogin;
+	BootstrapButton twitterLogin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +51,18 @@ public class AuthorizationView extends Activity {
 			startActivity(new Intent(AuthorizationView.this, RouteList.class));
 		}
 		
-		authorize = (BootstrapButton) findViewById(R.id.authorization);
+		facebookLogin = (BootstrapButton) findViewById(R.id.login_facebook);
+		twitterLogin = (BootstrapButton) findViewById(R.id.login_twitter);
 		
-		authorize.setOnClickListener(new View.OnClickListener() {
+		twitterLogin.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				twitterLogin();
+			}
+		});
+		
+		facebookLogin.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -71,6 +82,23 @@ public class AuthorizationView extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+	}
+	
+	private void twitterLogin() {
+		ParseTwitterUtils.logIn(this, new LogInCallback() {
+			
+			@Override
+			public void done(ParseUser user, ParseException err) {
+				if (user == null) {
+					
+				} else {
+					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
+					editor.putString("userObjectId", user.getObjectId());
+					editor.commit();
+					startActivity(new Intent(AuthorizationView.this, RouteList.class));
+				}
+			}
+		});
 	}
 	
 	private void facebookLogin() {
@@ -111,8 +139,6 @@ public class AuthorizationView extends Activity {
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
-//						ParseUser.getCurrentUser().put("fbName", user.getName());
-//						ParseUser.getCurrentUser().saveInBackground();
 					}
 				}
 			});

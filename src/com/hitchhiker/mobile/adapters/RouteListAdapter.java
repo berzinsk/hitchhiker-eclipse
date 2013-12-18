@@ -1,20 +1,25 @@
 package com.hitchhiker.mobile.adapters;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import com.facebook.widget.ProfilePictureView;
 import com.hitchhiker.mobile.R;
+import com.hitchhiker.mobile.asynctasks.GetUserPicture;
 import com.hitchhiker.mobile.objects.Route;
 
 import android.app.Activity;
-import android.app.TabActivity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.nfc.Tag;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RouteListAdapter extends BaseAdapter {
@@ -55,7 +60,7 @@ public class RouteListAdapter extends BaseAdapter {
 		if (view == null) {
 			tag = new Tag();
 			view = inflater.inflate(R.layout.row_01, null);
-			tag.authorPicture = (ProfilePictureView) view.findViewById(R.id.row_profilePicture);
+			tag.authorPicture = (ImageView) view.findViewById(R.id.row_profilePicture);
 			tag.authorName = (TextView) view.findViewById(R.id.row_name);
 			Typeface font = Typeface.createFromAsset(activity.getAssets(), "fonts/CharisSILI.ttf");
 			tag.authorName.setTypeface(font);
@@ -68,7 +73,7 @@ public class RouteListAdapter extends BaseAdapter {
 			tag = (Tag) view.getTag();
 		}
 		
-		tag.authorPicture.setProfileId(routes.get(index).getAuthorId());
+		new GetUserPicture(tag.authorPicture).execute("http://graph.facebook.com/"+routes.get(index).getAuthorId()+"/picture?style=small");
 		tag.authorName.setText(routes.get(index).getAuthorName());
 		tag.routeFrom.setText(routes.get(index).getRouteFrom());
 		tag.routeTo.setText(routes.get(index).getRouteTo());
@@ -76,7 +81,7 @@ public class RouteListAdapter extends BaseAdapter {
 	}
 	
 	private static class Tag {
-		ProfilePictureView authorPicture;
+		ImageView authorPicture;
 		TextView authorName;
 		TextView routeFrom;
 		TextView routeTo;
