@@ -49,7 +49,7 @@ public class API {
 		
 		Route route;
 		List<Route> routes = new ArrayList<Route>();
-		String url = "https://api.parse.com/1/classes/Routes/";
+		String url = "https://api.parse.com/1/classes/Routes?order=-createdAt";
 		
 		JSONObject object = null;
 		try {
@@ -137,6 +137,18 @@ public class API {
 			
 			if (data.has("availableSeats")) {
 				route.setAvailableSeats(data.getInt("availableSeats"));
+			}
+			
+			List<String> passengers = new ArrayList<String>();
+			JSONArray object = null;
+			if (data.has("passengers")) {
+				object = data.getJSONArray("passengers");
+				for (int i = 0; i < object.length(); i++) {
+					passengers.add(object.get(i).toString());
+				}
+				if (passengers != null) {
+					route.setPassengers(passengers);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

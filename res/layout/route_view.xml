@@ -6,6 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#0098FF"
     tools:context=".RouteView" >
 
     <TextView
@@ -62,5 +63,22 @@
         android:layout_alignBottom="@+id/price_view"
         android:layout_alignLeft="@+id/departure_date_view"
         android:text="@string/seats" />
+
+    <Button
+        android:id="@+id/join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/seats_view"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginTop="30dp"
+        android:text="@string/join" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/seats_view"
+        android:layout_centerVertical="true"
+        android:src="@drawable/date_icon" />
 
 </RelativeLayout>

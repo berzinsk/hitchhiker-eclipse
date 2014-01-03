@@ -1,5 +1,7 @@
 package com.hitchhiker.mobile.objects;
 
+import java.util.List;
+
 public class Route {
 	
 	private String id;
@@ -12,6 +14,7 @@ public class Route {
 	private String departureTime;
 	private String departureDate;
 	private int availableSeats;
+	private List<String> passengers;
 	
 	public Route() {
 	}
@@ -96,6 +99,11 @@ public class Route {
 		return this;
 	}
 	
+	public synchronized Route setPassengers(List<String> passengers) {
+		this.passengers = passengers;
+		return this;
+	}
+	
 	public synchronized String getId() {
 		return this.id;
 	}
@@ -134,5 +142,9 @@ public class Route {
 	
 	public synchronized int getAvailableSeats() {
 		return this.availableSeats;
+	}
+	
+	public synchronized List<String> getPassengers() {
+		return this.passengers;
 	}
 }

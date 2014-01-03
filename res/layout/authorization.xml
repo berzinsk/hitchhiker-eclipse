@@ -10,14 +10,28 @@
     tools:context=".AuthorizationView" >
 
     <com.beardedhen.bbutton.BootstrapButton
-        android:id="@+id/authorization"
+        android:id="@+id/login_facebook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/authorize"
+        android:text="@string/login_with_facebook"
         androidbootstrap:roundedCorners="true"
         androidbootstrap:size="default"
         androidbootstrap:type="primary" />
+
+    <com.beardedhen.bbutton.BootstrapButton
+        android:id="@+id/login_twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_facebook"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:text="@string/login_with_twitter"
+        android:visibility="gone"
+        androidbootstrap:roundedCorners="true"
+        androidbootstrap:size="default"
+        androidbootstrap:type="primary" >
+    </com.beardedhen.bbutton.BootstrapButton>
 
 </RelativeLayout>

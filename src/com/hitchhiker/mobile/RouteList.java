@@ -18,8 +18,13 @@ import com.parse.ParseUser;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -130,8 +135,40 @@ public class RouteList extends Activity {
 	public void chooseRoute(int position) {
 		position--;
 		Route route = routes.get(position);
-		((Hitchhiker) getApplication()).setRoute(routes.get(position));
+		((Hitchhiker) getApplication()).setRoute(route);
 		startActivity(new Intent(RouteList.this, RouteView.class));
 	}
-
+	
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if (keyCode == KeyEvent.KEYCODE_BACK) {
+    		Builder alert = new AlertDialog.Builder(this);
+    		alert.setTitle(getResources().getString(R.string.app_name));
+    		alert.setMessage("Are you sure you want to quit?");
+    		
+    		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    			
+    			@Override
+    			public void onClick(DialogInterface dialog, int which) {
+    				moveTaskToBack(true);
+    			}
+    		});
+    		
+    		alert.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			});
+    		
+    		try {
+				alert.show();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    		
+    		return true;
+    	}
+    	return super.onKeyDown(keyCode, event);
+    }
 }
