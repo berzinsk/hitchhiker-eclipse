@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -108,7 +107,7 @@ public class AuthorizationView extends Activity {
 			@Override
 			public void done(ParseUser user, ParseException err) {
 				if (user == null) {
-					Log.d("No useeed", "No useeer");
+					
 				} else if (user != null) {
 					makeMeRequest();
 					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
@@ -130,7 +129,6 @@ public class AuthorizationView extends Activity {
 						JSONObject userProfile = new JSONObject();
 						
 						try {
-							Log.d("Stradaaa", "Stradaaaa");
 							userProfile.put("facebookId", user.getId());
 							userProfile.put("name", user.getName());
 							ParseUser currentUser = ParseUser.getCurrentUser();

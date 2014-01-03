@@ -6,7 +6,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="8"
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -61,7 +61,8 @@
         </activity>
         <activity
             android:name="com.hitchhiker.mobile.RouteView"
-            android:label="@string/title_activity_route_view" >
+            android:label="@string/title_activity_route_view"
+            android:screenOrientation="portrait" >
         </activity>
         <meta-data android:name="com.crashlytics.ApiKey" android:value="9cd1d123d4df4d5ebc29e2ec5e2f83936229dc0f"/>
     </application>
