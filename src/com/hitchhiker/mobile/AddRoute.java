@@ -6,17 +6,23 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.beardedhen.bbutton.BootstrapButton;
 import com.parse.Parse;
@@ -28,15 +34,19 @@ public class AddRoute extends Activity {
 	static final int TIME_DIALOG_ID = 1000;
 	static final int DATE_DIALOG_ID = 999;
 	
-	EditText routeFrom;
-	EditText routeTo;
-	EditText price;
-	EditText seats;
-	Button departureTimeButton;
-	Button departureDateButton;
-	BootstrapButton saveButton;
+	final Context context = this;
+	
+	TextView routeFrom;
+	TextView routeTo;
+	TextView price;
+	TextView seats;
 	String departureTime;
 	String departureDate;
+	ImageView addDateImage;
+	ImageView addRoteFromImage;
+	ImageView addRouteToImage;
+	TextView routeFromText;
+	TextView routeToText;
 	
 	private int hour;
     private int minute;
@@ -51,44 +61,129 @@ public class AddRoute extends Activity {
 //		Parse.initialize(this, "IfqZO5qsBYS8vsGh0XwqKbpuhndnIihhrOhgVTxK", "2Q2jMF3PlbIgvjuRbfA3aAbj0x9CDqyO3UcOcfCq");
 		initializeFields();
 		
-		saveButton.setOnClickListener(new View.OnClickListener() {
+//		saveButton.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				
+//				ParseObject route = new ParseObject("Routes");
+//				route.put("routeFrom", routeFrom.getText().toString());
+//				route.put("routeTo", routeTo.getText().toString());
+//				route.put("distance", 104L);
+//				route.put("departureTime", getDepartureTime());
+//				route.put("departureDate", getDepartureDate());
+//				route.put("price", Double.valueOf(price.getText().toString()));
+//				route.put("authorId", userFacebookId());
+//				route.put("authorName", userFacebookName());
+//				route.put("availableSeats", Integer.parseInt(seats.getText().toString()));
+//				
+//				route.saveInBackground();
+//				
+//				Intent routeList = new Intent(AddRoute.this, RouteList.class);
+//				startActivity(routeList);
+//			}
+//		});
+		
+//		departureDateButton.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				showDialog(DATE_DIALOG_ID);
+//			}
+//		});
+		
+//		departureTimeButton.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				showDialog(TIME_DIALOG_ID);
+//			}
+//		});
+		
+		addRoteFromImage = (ImageView) findViewById(R.id.add_from_image);
+		addRouteToImage = (ImageView) findViewById(R.id.add_to_image);
+		routeFromText = (TextView) findViewById(R.id.add_from_result);
+		routeToText = (TextView) findViewById(R.id.add_to_result);
+		addRoteFromImage.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				
-				ParseObject route = new ParseObject("Routes");
-				route.put("routeFrom", routeFrom.getText().toString());
-				route.put("routeTo", routeTo.getText().toString());
-				route.put("distance", 104L);
-				route.put("departureTime", getDepartureTime());
-				route.put("departureDate", getDepartureDate());
-				route.put("price", Double.valueOf(price.getText().toString()));
-				route.put("authorId", userFacebookId());
-				route.put("authorName", userFacebookName());
-				route.put("availableSeats", Integer.parseInt(seats.getText().toString()));
-				
-				route.saveInBackground();
-				
-				Intent routeList = new Intent(AddRoute.this, RouteList.class);
-				startActivity(routeList);
+				buildDialog("Add route from", routeFromText, false);
 			}
 		});
 		
-		departureDateButton.setOnClickListener(new View.OnClickListener() {
+		addRouteToImage.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				buildDialog("Add route to", routeToText, false);
+			}
+		});
+		
+		addDateImage = (ImageView) findViewById(R.id.add_date_image);
+		addDateImage.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				showDialog(DATE_DIALOG_ID);
 			}
 		});
+	}
+	
+	private void buildDialog(String hint, final TextView textView, boolean numbers) {
+		final Dialog dialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
+		dialog.setContentView(R.layout.custom_dialog);
 		
-		departureTimeButton.setOnClickListener(new View.OnClickListener() {
+		final EditText input = (EditText) dialog.findViewById(R.id.dialog_edit_text);
+		input.setHint(hint);
+		Button dialogButtonAdd = (Button) dialog.findViewById(R.id.dialog_button_add);
+		Button dialogButtonCancel = (Button) dialog.findViewById(R.id.dialog_button_cancel);
+		
+		dialogButtonAdd.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				showDialog(TIME_DIALOG_ID);
+				textView.setText(input.getText().toString());
+				dialog.dismiss();
 			}
 		});
+		
+		dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		
+		dialog.show();
+	}
+	
+	private void buildAlertDialog(String title, final TextView textView, boolean numbers) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(AddRoute.this);
+		
+		alert.setTitle(title);
+		
+		final EditText input = new EditText(AddRoute.this);
+		alert.setView(input);
+		
+		alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				textView.setText(input.getText().toString());
+			}
+		});
+		
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+			}
+		});
+		
+		alert.show();
 	}
 	
 	private String userFacebookId() {
@@ -147,7 +242,7 @@ public class AddRoute extends Activity {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
             setDepartureTime(String.valueOf(convert(hourOfDay) + ":" + convert(minutes)));
-            departureTimeButton.setText(String.valueOf(convert(hourOfDay) + ":" + convert(minutes)));
+//            departureTimeButton.setText(String.valueOf(convert(hourOfDay) + ":" + convert(minutes)));
          }
  
     };
@@ -158,7 +253,7 @@ public class AddRoute extends Activity {
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
 			setDepartureDate(String.valueOf(dayOfMonth + "." + monthOfYear + "." + year));
-			departureDateButton.setText(String.valueOf(dayOfMonth + "." + monthOfYear + "." + year));
+//			departureDateButton.setText(String.valueOf(dayOfMonth + "." + monthOfYear + "." + year));
 		}
 	};
 
@@ -170,13 +265,6 @@ public class AddRoute extends Activity {
 	}
 	
 	private void initializeFields() {
-		routeFrom = (EditText) findViewById(R.id.driving_from_field);
-		routeTo = (EditText) findViewById(R.id.driving_to_field);
-		price = (EditText) findViewById(R.id.price_field);
-		departureTimeButton = (Button) findViewById(R.id.time_select);
-		saveButton = (BootstrapButton) findViewById(R.id.save_button);
-		departureDateButton = (Button) findViewById(R.id.date_select);
-		seats = (EditText) findViewById(R.id.seats);
 	}
 	
 	private String getDepartureTime() {

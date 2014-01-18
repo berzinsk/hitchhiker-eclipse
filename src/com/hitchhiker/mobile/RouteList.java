@@ -142,31 +142,7 @@ public class RouteList extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
     	if (keyCode == KeyEvent.KEYCODE_BACK) {
-    		Builder alert = new AlertDialog.Builder(this);
-    		alert.setTitle(getResources().getString(R.string.app_name));
-    		alert.setMessage("Are you sure you want to quit?");
-    		
-    		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-    			
-    			@Override
-    			public void onClick(DialogInterface dialog, int which) {
-    				moveTaskToBack(true);
-    			}
-    		});
-    		
-    		alert.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-			});
-    		
-    		try {
-				alert.show();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-    		
+    		moveTaskToBack(true);
     		return true;
     	}
     	return super.onKeyDown(keyCode, event);

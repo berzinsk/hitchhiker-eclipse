@@ -52,7 +52,7 @@ public class RouteView extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				joinRoute();
+				joinDeclineRoute();
 			}
 		});
 	}
@@ -64,7 +64,7 @@ public class RouteView extends Activity {
 		return true;
 	}
 	
-	public void updateUI(Route route) {
+	public void updateUI(final Route route) {
 		((Hitchhiker) getApplicationContext()).setRoute(route);
 		
 		TextView routeFrom = (TextView) findViewById(R.id.route_from_view);
@@ -89,13 +89,21 @@ public class RouteView extends Activity {
 			for (int i = 0; i < route.getPassengers().size(); i++) {
 				if (route.getPassengers().get(i).contains(ParseUser.getCurrentUser().getObjectId())) {
 					joinRoute.setText(getResources().getString(R.string.decline));
-					joinRoute.setOnClickListener(null);
+					joinRoute.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							List<String> passengers = route.getPassengers();
+							passengers.remove(ParseUser.getCurrentUser().getObjectId());
+							
+						}
+					});
 				}
 			}
 		}
 	}
 	
-	private void joinRoute() {
+	private void joinDeclineRoute() {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Routes");
 		
 		query.getInBackground(route.getId(), new GetCallback<ParseObject>() {
