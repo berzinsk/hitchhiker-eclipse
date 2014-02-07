@@ -8,6 +8,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.hitchhiker.mobile.adapters.PlacesAutoCompleteAdapter;
 import com.hitchhiker.mobile.asynctasks.GetRouteDetails;
 import com.hitchhiker.mobile.objects.Route;
 import com.hitchhiker.mobile.tools.API;
@@ -24,8 +25,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RouteView extends Activity {
 	
@@ -61,6 +66,18 @@ public class RouteView extends Activity {
 			@Override
 			public void onClick(View v) {
 				joinDeclineRoute();
+			}
+		});
+		
+		AutoCompleteTextView autoCompView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView1);
+		autoCompView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item));
+		autoCompView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int position,
+					long id) {
+				String str = (String) adapterView.getItemAtPosition(position);
+		        Toast.makeText(RouteView.this, str, Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,7 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
+import com.hitchhiker.mobile.adapters.PlacesAutoCompleteAdapter;
 import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -128,19 +132,24 @@ public class AddRoute extends Activity {
 		});
 	}
 	
-	private void imageOnClickListener(ImageView imageView, final String hint, final TextView textView, final Boolean numbers) {
+	private void imageOnClickListener(ImageView imageView, final String hint, final TextView textView,
+			final Boolean numbers, final Boolean map) {
 		imageView.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				buildDialog(hint, textView, numbers);
+				buildDialog(hint, textView, numbers, map);
 			}
 		});
 	}
 	
-	private void buildDialog(String hint, final TextView textView, boolean numbers) {
+	private void buildDialog(String hint, final TextView textView, boolean numbers, boolean map) {
 		final Dialog dialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
 		dialog.setContentView(R.layout.custom_dialog);
+		
+		if (map == true) {
+			
+		}
 		
 		final EditText input = (EditText) dialog.findViewById(R.id.dialog_edit_text);
 		input.setHint(hint);
@@ -274,12 +283,12 @@ public class AddRoute extends Activity {
 		priceText = (TextView) findViewById(R.id.add_price_result);
 		stopsText = (TextView) findViewById(R.id.add_stops_result);
 		
-		imageOnClickListener(addRoteFromImage, "Add route from", routeFromText, false);
-		imageOnClickListener(addSeatsImage, "Add seats avaailable", seatsText, true);
-		imageOnClickListener(addNotesImage, "Add notes", notesText, false);
-		imageOnClickListener(addRouteToImage, "Add sroute to", routeToText, false);
-		imageOnClickListener(addPriceImage, "Add price", priceText, true);
-		imageOnClickListener(addStopsImage, "Add stops if any", stopsText, false);
+		imageOnClickListener(addRoteFromImage, "Add route from", routeFromText, false, true);
+		imageOnClickListener(addSeatsImage, "Add seats avaailable", seatsText, true, false);
+		imageOnClickListener(addNotesImage, "Add notes", notesText, false, false);
+		imageOnClickListener(addRouteToImage, "Add sroute to", routeToText, false, true);
+		imageOnClickListener(addPriceImage, "Add price", priceText, true, false);
+		imageOnClickListener(addStopsImage, "Add stops if any", stopsText, false, false);
 		
 	}
 	
