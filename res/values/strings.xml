@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
+
     <string name="app_id">210982895741034</string>
     <string name="app_name">Hitchhiker</string>
     <string name="action_settings">Settings</string>
@@ -26,5 +26,6 @@
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_twitter">Login with Twitter</string>
     <string name="decline">Decline</string>
+    <string name="title_activity_offline_view">OfflineView</string>
 
 </resources>

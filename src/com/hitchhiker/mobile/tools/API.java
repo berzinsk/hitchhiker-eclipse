@@ -47,6 +47,8 @@ public class API {
 	
 	public List<Route> getRouteList() {
 		
+		Log.d("IZPILDAAAS", "IZPILDAAAS");
+		
 		Route route;
 		List<Route> routes = new ArrayList<Route>();
 		String url = "https://api.parse.com/1/classes/Routes?order=-createdAt";
@@ -226,6 +228,7 @@ public class API {
 		}
 		
 		String result = stringBuilder.toString().trim();
+		Log.d("DATAAA", result);
 		return result;
 	}
 	

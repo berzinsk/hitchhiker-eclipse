@@ -9,6 +9,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.hitchhiker.mobile.adapters.RouteListAdapter;
 import com.hitchhiker.mobile.asynctasks.GetRouteList;
+import com.hitchhiker.mobile.asynctasks.TestNetwork;
 import com.hitchhiker.mobile.objects.Route;
 import com.hitchhiker.mobile.tools.API;
 import com.parse.ParseObject;
@@ -43,6 +44,8 @@ public class RouteList extends Activity {
 	public AsyncTask<Void, Void, Void> getRouteList;
 	public List<Route> routes = new ArrayList<Route>();
 	public ProgressDialog progressDialog;
+	
+	public AsyncTask<Void, Void, Void> testNetwork;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,8 @@ public class RouteList extends Activity {
 		}
 		
 		setContentView(R.layout.route_list);
+		
+		Log.d("AAAAAAA", "AAAAAAA");
 		
 		progressDialog = ProgressDialog.show(RouteList.this, null, getResources().getString(R.string.loading), true);
 		progressDialog.setCancelable(true);
@@ -103,6 +108,7 @@ public class RouteList extends Activity {
 	}
 	
 	private void getRouteList() {
+		Log.d("GETROUTELIST", "GETROUTELIST");
 		getRouteList = new GetRouteList(this, true).execute();
 	}
 	
@@ -147,4 +153,12 @@ public class RouteList extends Activity {
     	}
     	return super.onKeyDown(keyCode, event);
     }
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+//		testNetwork = new TestNetwork(this).execute();
+		
+		getRouteList();
+	}
 }

@@ -3,6 +3,11 @@ package com.hitchhiker.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.hitchhiker.mobile.asynctasks.GetRouteDetails;
 import com.hitchhiker.mobile.objects.Route;
 import com.hitchhiker.mobile.tools.API;
@@ -14,6 +19,7 @@ import com.parse.ParseUser;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.Menu;
@@ -41,6 +47,8 @@ public class RouteView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.route_view);
 		
+		addMap();
+		
 		progressDialog = ProgressDialog.show(RouteView.this, null, getResources().getString(R.string.loading), true);
 		
 		route = ((Hitchhiker) this.getApplicationContext()).getRoute();
@@ -62,6 +70,21 @@ public class RouteView extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.route_view, menu);
 		return true;
+	}
+	
+	@SuppressLint("NewApi")
+	public void addMap() {
+		GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+		
+		LatLng lielvarde = new LatLng(56.712892, 24.835146);
+		
+		map.setMyLocationEnabled(true);
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(lielvarde, 13));
+		
+		map.addMarker(new MarkerOptions()
+				.title("Kārļa apartamenti")
+				.snippet("He's cool dude!")
+				.position(lielvarde));
 	}
 	
 	public void updateUI(final Route route) {
@@ -118,6 +141,8 @@ public class RouteView extends Activity {
 				}
 			}
 		});
+		
+//		updateUI(route);
 	}
 
 }

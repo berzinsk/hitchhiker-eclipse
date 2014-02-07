@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +22,7 @@ import com.beardedhen.bbutton.BootstrapButton;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
+import com.hitchhiker.mobile.asynctasks.TestNetwork;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
@@ -34,6 +36,8 @@ import com.parse.ParseUser;
 import com.parse.PushService;
 
 public class AuthorizationView extends Activity {
+	
+	public AsyncTask<Void, Void, Void> testNetwork;
 	
 	BootstrapButton facebookLogin;
 	BootstrapButton twitterLogin;
@@ -142,4 +146,11 @@ public class AuthorizationView extends Activity {
 			});
 		}
 	}
+
+//	@Override
+//	protected void onResume() {
+//		super.onResume();
+//		
+//		testNetwork = new TestNetwork(this).execute();
+//	}
 }

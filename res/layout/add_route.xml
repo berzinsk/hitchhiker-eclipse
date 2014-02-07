@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/abc" />
+                    android:src="@drawable/button_states" />
 
                 <TextView
                     android:id="@+id/add_from"
@@ -47,8 +47,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="5dp"
                     android:textColor="#fff"
+                    android:textSize="18dp"
                     android:text="FROM:" />
 
                 <TextView
@@ -75,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/abc" />
+                    android:src="@drawable/button_states" />
                 
                 <TextView
                     android:id="@+id/add_date"
@@ -83,8 +84,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="5dp"
                     android:textColor="#fff"
+                    android:textSize="18dp"
                     android:text="DATE:" />
 
                 <TextView
@@ -111,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/abc" />
+                    android:src="@drawable/button_states" />
                 
                 <TextView
                     android:id="@+id/add_seats"
@@ -119,8 +121,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="5dp"
                     android:textColor="#fff"
+                    android:textSize="18dp"
                     android:text="SEATS:" />
 
                 <TextView
@@ -147,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/abc" />
+                    android:src="@drawable/button_states" />
                 
                 <TextView
                     android:id="@+id/add_notes"
@@ -155,8 +158,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="5dp"
                     android:textColor="#fff"
+                    android:textSize="18dp"
                     android:text="NOTES:" />
 
                 <TextView
@@ -193,7 +197,7 @@
                      android:layout_height="wrap_content"
                      android:layout_alignParentRight="true"
                      android:layout_alignParentTop="true"
-                     android:src="@drawable/abc" />
+                     android:src="@drawable/button_states" />
                  
                  <TextView
                     android:id="@+id/add_to"
@@ -201,8 +205,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="5dp"
                     android:textColor="#fff"
+                    android:textSize="18dp"
                     android:text="TO:" />
 
                  <TextView
@@ -229,7 +234,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/abc" />
+                    android:src="@drawable/button_states" />
                 
                 <TextView
                     android:id="@+id/add_time"
@@ -237,8 +242,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="5dp"
                     android:textColor="#fff"
+                    android:textSize="18dp"
                     android:text="TIME:" />
 
                 <TextView
@@ -265,7 +271,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/abc" />
+                    android:src="@drawable/button_states" />
                 
                 <TextView
                     android:id="@+id/add_price"
@@ -273,8 +279,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="5dp"
                     android:textColor="#fff"
+                    android:textSize="18dp"
                     android:text="PRICE:" />
 
                 <TextView
@@ -301,7 +308,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/abc" />
+                    android:src="@drawable/button_states" />
                 
                 <TextView
                     android:id="@+id/add_stops"
@@ -309,8 +316,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="5dp"
                     android:textColor="#fff"
+                    android:textSize="18dp"
                     android:text="STOPS:" />
 
                 <TextView
@@ -334,7 +342,7 @@
         android:background="#006E106F" >
 
         <Button
-            android:id="@+id/post_button"
+            android:id="@+id/button_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/cancel_button"
