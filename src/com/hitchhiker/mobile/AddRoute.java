@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -12,6 +13,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,6 +30,8 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.hitchhiker.mobile.adapters.PlacesAutoCompleteAdapter;
+import com.hitchhiker.mobile.asynctasks.GetAddress;
+import com.hitchhiker.mobile.tools.API;
 import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -38,27 +42,29 @@ public class AddRoute extends Activity {
 	
 	final Context context = this;
 	
+	public API api;
+	
 	TextView seats;
 	String departureTime;
 	String departureDate;
 	
-	ImageView addRoteFromImage;
-	ImageView addDateImage;
-	ImageView addSeatsImage;
-	ImageView addNotesImage;
-	ImageView addRouteToImage;
-	ImageView addTimeImage;
-	ImageView addPriceImage;
-	ImageView addStopsImage;
+	private ImageView addRoteFromImage;
+	private ImageView addDateImage;
+	private ImageView addSeatsImage;
+	private ImageView addNotesImage;
+	private ImageView addRouteToImage;
+	private ImageView addTimeImage;
+	private ImageView addPriceImage;
+	private ImageView addStopsImage;
 	
-	TextView routeFromText;
-	TextView dateText;
-	TextView seatsText;
-	TextView notesText;
-	TextView routeToText;
-	TextView timeText;
-	TextView priceText;
-	TextView stopsText;
+	private AutoCompleteTextView routeFromText;
+	private TextView dateText;
+	private EditText seatsText;
+	private EditText notesText;
+	private AutoCompleteTextView routeToText;
+	private TextView timeText;
+	private EditText priceText;
+	private EditText stopsText;
 	
 	Button postButton;
 	Button cancelButton;
@@ -68,10 +74,24 @@ public class AddRoute extends Activity {
     private int year;
     private int month;
     private int day;
+    
+    private double fromLat;
+    private double fromLng;
+    private double toLat;
+    private double toLng;
+    
+    public AsyncTask<Void, Void, Void> getAddress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		try {
+			api = new API(this, getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		setContentView(R.layout.add_route);
 //		Parse.initialize(this, "IfqZO5qsBYS8vsGh0XwqKbpuhndnIihhrOhgVTxK", "2Q2jMF3PlbIgvjuRbfA3aAbj0x9CDqyO3UcOcfCq");
 		initializeFields();
@@ -97,6 +117,10 @@ public class AddRoute extends Activity {
 					route.put("authorId", userFacebookId());
 					route.put("authorName", userFacebookName());
 					route.put("availableSeats", Integer.parseInt(seatsText.getText().toString()));
+					route.put("latFrom", getFromLatitude());
+					route.put("lngFrom", getFromLongitude());
+					route.put("latTo", getToLatitude());
+					route.put("lngTo", getToLongitude());
 					
 					route.saveInBackground();
 					
@@ -274,21 +298,49 @@ public class AddRoute extends Activity {
 		addPriceImage = (ImageView) findViewById(R.id.add_price_image);
 		addStopsImage = (ImageView) findViewById(R.id.add_stops_image);
 		
-		routeFromText = (TextView) findViewById(R.id.add_from_result);
+//		routeFromText = (TextView) findViewById(R.id.add_from_result);
 		dateText = (TextView) findViewById(R.id.add_date_result);
-		seatsText = (TextView) findViewById(R.id.add_seats_result);
-		notesText = (TextView) findViewById(R.id.add_notes_result);
-		routeToText = (TextView) findViewById(R.id.add_to_result);
+//		seatsText = (TextView) findViewById(R.id.add_seats_result);
+//		notesText = (TextView) findViewById(R.id.add_notes_result);
+//		routeToText = (TextView) findViewById(R.id.add_to_result);
 		timeText = (TextView) findViewById(R.id.add_time_result);
-		priceText = (TextView) findViewById(R.id.add_price_result);
-		stopsText = (TextView) findViewById(R.id.add_stops_result);
+		priceText = (EditText) findViewById(R.id.price_edittext);
+		seatsText = (EditText) findViewById(R.id.seats_eidttext);
+//		priceText = (TextView) findViewById(R.id.add_price_result);
+//		stopsText = (TextView) findViewById(R.id.add_stops_result);
 		
-		imageOnClickListener(addRoteFromImage, "Add route from", routeFromText, false, true);
-		imageOnClickListener(addSeatsImage, "Add seats avaailable", seatsText, true, false);
-		imageOnClickListener(addNotesImage, "Add notes", notesText, false, false);
-		imageOnClickListener(addRouteToImage, "Add sroute to", routeToText, false, true);
-		imageOnClickListener(addPriceImage, "Add price", priceText, true, false);
-		imageOnClickListener(addStopsImage, "Add stops if any", stopsText, false, false);
+		routeFromText = (AutoCompleteTextView) findViewById(R.id.route_from_edittext);
+		routeFromText.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item));
+		routeFromText.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int position,
+					long id) {
+				String str = (String) adapterView.getItemAtPosition(position);
+				getAddress = new GetAddress(AddRoute.this, str, true).execute();
+				
+		        
+			}
+		});
+		
+		routeToText = (AutoCompleteTextView) findViewById(R.id.route_to_edittext);
+		routeToText.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item));
+		routeToText.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int position,
+					long id) {
+				String str = (String) adapterView.getItemAtPosition(position);
+				getAddress = new GetAddress(AddRoute.this, str, false).execute();
+			}
+		});
+		
+//		imageOnClickListener(addRoteFromImage, "Add route from", routeFromText, false, true);
+//		imageOnClickListener(addSeatsImage, "Add seats avaailable", seatsText, true, false);
+//		imageOnClickListener(addNotesImage, "Add notes", notesText, false, false);
+//		imageOnClickListener(addRouteToImage, "Add sroute to", routeToText, false, true);
+//		imageOnClickListener(addPriceImage, "Add price", priceText, true, false);
+//		imageOnClickListener(addStopsImage, "Add stops if any", stopsText, false, false);
 		
 	}
 	
@@ -316,6 +368,38 @@ public class AddRoute extends Activity {
 		} else {
 			return "0" + String.valueOf(c);
 		}
+	}
+
+	public double getFromLatitude() {
+		return fromLat;
+	}
+
+	public void setFromLatitude(double lat) {
+		this.fromLat = lat;
+	}
+
+	public double getFromLongitude() {
+		return fromLng;
+	}
+
+	public void setFromLongitude(double lng) {
+		this.fromLng = lng;
+	}
+
+	public double getToLatitude() {
+		return toLat;
+	}
+
+	public void setToLatitude(double toLat) {
+		this.toLat = toLat;
+	}
+
+	public double getToLongitude() {
+		return toLng;
+	}
+
+	public void setToLongitude(double toLng) {
+		this.toLng = toLng;
 	}
 
 }

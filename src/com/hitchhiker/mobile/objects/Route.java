@@ -15,6 +15,10 @@ public class Route {
 	private String departureDate;
 	private int availableSeats;
 	private List<String> passengers;
+	private double latFrom;
+	private double lngFrom;
+	private double latTo;
+	private double lngTo;
 	
 	public Route() {
 	}
@@ -104,6 +108,26 @@ public class Route {
 		return this;
 	}
 	
+	public synchronized Route setLatitudeFrom(double lat) {
+		this.latFrom = lat;
+		return this;
+	}
+	
+	public synchronized Route setLatitudeTo(double lat) {
+		this.latTo = lat;
+		return this;
+	}
+	
+	public synchronized Route setLongitudeFrom(double lng) {
+		this.lngFrom = lng;
+		return this;
+	}
+	
+	public synchronized Route setLongitudeTo(double lng) {
+		this.lngTo = lng;
+		return this;
+	}
+	
 	public synchronized String getId() {
 		return this.id;
 	}
@@ -146,5 +170,21 @@ public class Route {
 	
 	public synchronized List<String> getPassengers() {
 		return this.passengers;
+	}
+	
+	public synchronized Double getLatitudeFrom() {
+		return this.latFrom;
+	}
+	
+	public synchronized Double getLatitudeTo() {
+		return this.latTo;
+	}
+	
+	public synchronized Double getLongitudeFrom() {
+		return this.lngFrom;
+	}
+	
+	public synchronized Double getLongitudeTo() {
+		return this.lngTo;
 	}
 }

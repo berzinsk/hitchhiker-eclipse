@@ -1,8 +1,10 @@
 package com.hitchhiker.mobile.tools;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -11,9 +13,14 @@ import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +49,9 @@ public class API {
 	private HttpGet httpget;
 	private HttpPost httppost;
 	
+	private double lat;
+	private double lng;
+	
 	
 	/**
 	 * API constructor
@@ -56,6 +66,31 @@ public class API {
 	}
 	
 	public API() {
+	}
+	
+	public double location(String address) {
+		
+		String formatedAddress = address.replace(" ", "%20");
+		
+		String url = "http://maps.google.com/maps/api/geocode/json?address=" + formatedAddress + "&sensor=false";
+		JSONObject object;
+		try {
+			object = getJSONObject(url);
+			
+			JSONArray data = null;
+			if (object.has("results")) {
+				data = object.getJSONArray("results");
+			}
+			
+			for (int i = 0; i < data.length(); i++) {
+				JSONObject location = data.getJSONObject(i).getJSONObject("geometry").getJSONObject("location");
+				setLatitude(location.getDouble("lat"));
+				setLongitude(location.getDouble("lng"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 	public List<Route> getRouteList() {
@@ -152,6 +187,22 @@ public class API {
 				route.setAvailableSeats(data.getInt("availableSeats"));
 			}
 			
+			if (data.has("latFrom")) {
+				route.setLatitudeFrom(data.getDouble("latFrom"));
+			}
+			
+			if (data.has("latTo")) {
+				route.setLatitudeTo(data.getDouble("latTo"));
+			}
+			
+			if (data.has("lngFrom")) {
+				route.setLongitudeFrom(data.getDouble("lngFrom"));
+			}
+			
+			if (data.has("lngTo")) {
+				route.setLongitudeTo(data.getDouble("lngTo"));
+			}
+			
 			List<String> passengers = new ArrayList<String>();
 			JSONArray object = null;
 			if (data.has("passengers")) {
@@ -168,6 +219,26 @@ public class API {
 		}
 		
 		return route;
+	}
+	
+	public void joinRoute(String routeId, String userId) {
+		HttpClient hclient = new DefaultHttpClient();
+		HttpPost hpost = new HttpPost("https://api.parse.com/1/classes/Routes/" + routeId);
+		
+		List<String> passengers = new ArrayList<String>();
+		passengers.add(userId);
+		
+		hpost.setHeader("X-Parse-Application-Id", APPLICATION_ID);
+		hpost.setHeader("X-Parse-REST-API-Key", REST_API_KEY);
+		
+		try {
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+//		passengers.add(ParseUser.getCurrentUser().getObjectId());
 	}
 	
 	private JSONObject getJSONObject(String url) {
@@ -190,6 +261,56 @@ public class API {
 		} catch (JSONException e) {
 			return null;
 		}
+	}
+	
+public String getPolyData(String url) {
+	
+	Log.d("URRRLLLLL", url);
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		try {
+			// create DefaultHpptClient and HttpGet
+			httpclient = new DefaultHttpClient(); 
+			httpget = new HttpGet(url);
+			
+			HttpEntity entity = null;
+			try {
+				HttpResponse response = httpclient.execute(httpget);
+				entity = response.getEntity();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			if (entity != null) {
+				InputStream inputstream = null;
+				inputstream = entity.getContent();
+				
+				try {
+					BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream));
+					String line = null;
+					
+					while ((line = reader.readLine()) != null) {
+						stringBuilder.append(line + "\n");
+					}
+					
+					reader.close();
+				} catch (Exception e) {
+					// TODO: handle exception
+				} finally {
+					inputstream.close();
+				}
+				
+				httpclient.getConnectionManager().shutdown();
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		String result = stringBuilder.toString().trim();
+		Log.d("RESULT FROM GOOGLE", result);
+		return result;
 	}
 	
 	public String getData(String url) {
@@ -249,7 +370,7 @@ public class API {
 	 * @return String result	Data from url request
 	 */
 	
-	public String postData(String url) {
+	private String postData(String url) {
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		
@@ -258,8 +379,8 @@ public class API {
 			httpclient = new DefaultHttpClient();
 			httppost = new HttpPost();
 			
-			httpget.setHeader("X-Parse-Application-Id", APPLICATION_ID);
-			httpget.setHeader("X-Parse-REST-API-Key", REST_API_KEY);
+			httppost.setHeader("X-Parse-Application-Id", APPLICATION_ID);
+			httppost.setHeader("X-Parse-REST-API-Key", REST_API_KEY);
 			
 			HttpResponse response = httpclient.execute(httppost);
 			HttpEntity entity = response.getEntity();
@@ -293,7 +414,6 @@ public class API {
 	}
 	
 	public ArrayList<String> autocomplete(String input) {
-		Log.d("AUTOCOMPLETE", "AUTOCOMPLETE");
 		ArrayList<String> resultList = null;
 		
 		HttpURLConnection conn = null;
@@ -317,7 +437,7 @@ public class API {
 				
 			}
 		} catch (Exception e) {
-			Log.d("exception", e.toString());
+			e.printStackTrace();
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -326,18 +446,32 @@ public class API {
 		
 		try {
 			JSONObject jsonObj = new JSONObject(jsonResults.toString());
-			Log.d("JSON String", jsonResults.toString());
 			JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
 			
 			resultList = new ArrayList<String>(predsJsonArray.length());
 			for (int i = 0; i < predsJsonArray.length(); i++) {
 				resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
-				Log.d("JSONOBJECT DESCRIPTION", predsJsonArray.getJSONObject(i).getString("description"));
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		
 		return resultList;
+	}
+
+	public double getLatitude() {
+		return lat;
+	}
+
+	public void setLatitude(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLongitude() {
+		return lng;
+	}
+
+	public void setLongitude(double lng) {
+		this.lng = lng;
 	}
 }
