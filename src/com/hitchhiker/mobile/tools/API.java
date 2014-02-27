@@ -51,6 +51,7 @@ public class API {
 	
 	private double lat;
 	private double lng;
+	private String city;
 	
 	
 	/**
@@ -71,8 +72,10 @@ public class API {
 	public double location(String address) {
 		
 		String formatedAddress = address.replace(" ", "%20");
+		String formatedAddress2 = formatedAddress.replaceAll("\"|\"", "");
 		
-		String url = "http://maps.google.com/maps/api/geocode/json?address=" + formatedAddress + "&sensor=false";
+		String url = "http://maps.google.com/maps/api/geocode/json?address=" + formatedAddress2 + "&sensor=false";
+		Log.d("Addresss calll", url);
 		JSONObject object;
 		try {
 			object = getJSONObject(url);
@@ -86,11 +89,26 @@ public class API {
 				JSONObject location = data.getJSONObject(i).getJSONObject("geometry").getJSONObject("location");
 				setLatitude(location.getDouble("lat"));
 				setLongitude(location.getDouble("lng"));
+				
+				JSONArray city = data.getJSONObject(i).getJSONArray("address_components");
+				for (int j = 0; j < city.length(); j++) {
+					Log.d("TYPES", city.getString(j));
+					JSONObject types = city.getJSONObject(j);
+					
+					if (types.getString("types").contains("locality")) {
+						setCity(city.getJSONObject(j).getString("short_name"));
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+	
+	public String getCity(String address) {
+		
+		return null;
 	}
 	
 	public List<Route> getRouteList() {
@@ -122,8 +140,8 @@ public class API {
 			
 			for (int i = 0; i < data.length(); i++) {
 				route = new Route(data.getJSONObject(i).getString("objectId"),
-						data.getJSONObject(i).getString("routeFrom"),
-						data.getJSONObject(i).getString("routeTo"),
+						data.getJSONObject(i).getString("cityFrom"),
+						data.getJSONObject(i).getString("cityTo"),
 						data.getJSONObject(i).getString("authorId"),
 						data.getJSONObject(i).getString("authorName"));
 				routes.add(route);
@@ -473,5 +491,13 @@ public String getPolyData(String url) {
 
 	public void setLongitude(double lng) {
 		this.lng = lng;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 }

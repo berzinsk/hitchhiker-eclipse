@@ -14,6 +14,7 @@ public class GetAddress extends AsyncTask<Void, Void, Void> {
 	
 	private double lat;
 	private double lng;
+	private String city;
 	
 	public GetAddress(AddRoute view, String address, boolean routeFrom) {
 		this.view = view;
@@ -28,6 +29,7 @@ public class GetAddress extends AsyncTask<Void, Void, Void> {
 			view.api.location(address);
 			lat = view.api.getLatitude();
 			lng = view.api.getLongitude();
+			city = view.api.getCity();
 		} catch (Exception e) {
 			
 		}
@@ -39,9 +41,11 @@ public class GetAddress extends AsyncTask<Void, Void, Void> {
 		if (routeFrom == true) {
 			view.setFromLatitude(lat);
 			view.setFromLongitude(lng);
+			view.setFromCity(city);
 		} else {
 			view.setToLatitude(lat);
 			view.setToLongitude(lng);
+			view.setToCity(city);
 		}
 		
 		super.onPostExecute(result);

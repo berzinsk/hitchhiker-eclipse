@@ -79,6 +79,8 @@ public class AddRoute extends Activity {
     private double fromLng;
     private double toLat;
     private double toLng;
+    private String fromCity;
+    private String toCity;
     
     public AsyncTask<Void, Void, Void> getAddress;
 
@@ -121,6 +123,8 @@ public class AddRoute extends Activity {
 					route.put("lngFrom", getFromLongitude());
 					route.put("latTo", getToLatitude());
 					route.put("lngTo", getToLongitude());
+					route.put("cityFrom", getFromCity());
+					route.put("cityTo", getToCity());
 					
 					route.saveInBackground();
 					
@@ -400,6 +404,22 @@ public class AddRoute extends Activity {
 
 	public void setToLongitude(double toLng) {
 		this.toLng = toLng;
+	}
+
+	public String getFromCity() {
+		return fromCity;
+	}
+
+	public void setFromCity(String fromCity) {
+		this.fromCity = fromCity;
+	}
+
+	public String getToCity() {
+		return toCity;
+	}
+
+	public void setToCity(String toCity) {
+		this.toCity = toCity;
 	}
 
 }
