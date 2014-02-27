@@ -1,7 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    	xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true" >
+        
+    <LinearLayout 
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#B36E106F"
     android:orientation="vertical"
     android:baselineAligned="false"
@@ -52,13 +57,15 @@
                     android:textSize="18dp"
                     android:text="FROM:" />
 
-                <TextView
-                    android:id="@+id/add_from_result"
+                <AutoCompleteTextView
+                    android:id="@+id/route_from_edittext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/add_from"
-                    android:textColor="#fff"
-                    android:layout_centerVertical="true" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textColor="#fff" />
                 
             </RelativeLayout>
             
@@ -126,13 +133,16 @@
                     android:textSize="18dp"
                     android:text="SEATS:" />
 
-                <TextView
-                    android:id="@+id/add_seats_result"
+                <EditText
+                    android:id="@+id/seats_eidttext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/add_seats"
-                    android:textColor="#fff"
-                    android:layout_centerVertical="true" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textColor="#fff" />
                 
             </RelativeLayout>
             
@@ -163,13 +173,18 @@
                     android:textSize="18dp"
                     android:text="NOTES:" />
 
-                <TextView
-                    android:id="@+id/add_notes_result"
+                <EditText
+                    android:id="@+id/add_notes_edittext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/add_notes"
-                    android:textColor="#fff"
-                    android:layout_centerVertical="true" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textColor="#fff" >
+
+                    <requestFocus />
+                </EditText>
                 
             </RelativeLayout>
         </LinearLayout>
@@ -210,13 +225,15 @@
                     android:textSize="18dp"
                     android:text="TO:" />
 
-                 <TextView
-                     android:id="@+id/add_to_result"
+                 <AutoCompleteTextView
+                     android:id="@+id/route_to_edittext"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
-                     android:layout_alignLeft="@+id/add_to"
-                     android:textColor="#fff"
-                     android:layout_centerVertical="true" />
+                     android:layout_alignParentBottom="true"
+                     android:layout_alignParentLeft="true"
+                     android:ems="10"
+                     android:singleLine="true"
+                     android:textColor="#fff" />
                 
             </RelativeLayout>
             
@@ -284,13 +301,16 @@
                     android:textSize="18dp"
                     android:text="PRICE:" />
 
-                <TextView
-                    android:id="@+id/add_price_result"
+                <EditText
+                    android:id="@+id/price_edittext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/add_price"
-                    android:textColor="#fff"
-                    android:layout_centerVertical="true" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:singleLine="true"
+                    android:textColor="#fff" />
                 
             </RelativeLayout>
             
@@ -321,13 +341,15 @@
                     android:textSize="18dp"
                     android:text="STOPS:" />
 
-                <TextView
-                    android:id="@+id/add_stops_result"
+                <EditText
+                    android:id="@+id/EditText05"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/add_stops"
-                    android:textColor="#fff"
-                    android:layout_centerVertical="true" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textColor="#fff" />
                 
             </RelativeLayout>
         </LinearLayout>
@@ -373,3 +395,5 @@
         
     </RelativeLayout>
 </LinearLayout>
+        
+    </ScrollView>

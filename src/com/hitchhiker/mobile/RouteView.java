@@ -3,12 +3,19 @@ package com.hitchhiker.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.hitchhiker.mobile.asynctasks.GetPolyline;
 import com.hitchhiker.mobile.asynctasks.GetRouteDetails;
+import com.hitchhiker.mobile.asynctasks.JoinRoute;
 import com.hitchhiker.mobile.objects.Route;
 import com.hitchhiker.mobile.tools.API;
 import com.parse.GetCallback;
@@ -22,6 +29,8 @@ import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +43,13 @@ public class RouteView extends Activity {
 	public AsyncTask<Void, Void, Void> getRouteDetails;
 	public ProgressDialog progressDialog;
 	private Button joinRoute;
+	
+	private Double routeFromLat;
+	private Double routeFromLng;
+	private Double routeToLat;
+	private Double routeToLng;
+	
+	private String polylineResult;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +62,6 @@ public class RouteView extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.route_view);
-		
-		addMap();
 		
 		progressDialog = ProgressDialog.show(RouteView.this, null, getResources().getString(R.string.loading), true);
 		
@@ -73,22 +87,55 @@ public class RouteView extends Activity {
 	}
 	
 	@SuppressLint("NewApi")
-	public void addMap() {
+	public void addMap(String result) {
+		
+		Log.d("JSON FRMO GOOGLE", result);
+		
 		GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 		
-		LatLng lielvarde = new LatLng(56.712892, 24.835146);
+		LatLng routeFrom = new LatLng(getRouteFromLat(), getRouteFromLng());
+		LatLng routeTo = new LatLng(getRouteToLat(), getRouteToLng());
 		
 		map.setMyLocationEnabled(true);
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(lielvarde, 13));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(routeFrom, 6));
 		
 		map.addMarker(new MarkerOptions()
-				.title("Kārļa apartamenti")
-				.snippet("He's cool dude!")
-				.position(lielvarde));
+				.title("route from")
+				.position(routeFrom));
+		
+		map.addMarker(new MarkerOptions()
+				.title("route to")
+				.position(routeTo));
+		
+		try {
+			final JSONObject json = new JSONObject(result);
+			JSONArray routeArray = json.getJSONArray("routes");
+			JSONObject routes = routeArray.getJSONObject(0);
+			JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
+			String encodedString = overviewPolylines.getString("points");
+			List<LatLng> list = decodePoly(encodedString);
+			
+			for (int i = 0; i < list.size() - 1; i++) {
+				LatLng src = list.get(i);
+				LatLng dest = list.get(i + 1);
+				Polyline line = map.addPolyline(new PolylineOptions()
+									.add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
+									.width(2)
+									.color(Color.BLUE).geodesic(true));
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
 	public void updateUI(final Route route) {
 		((Hitchhiker) getApplicationContext()).setRoute(route);
+		
+		setRouteFromLat(route.getLatitudeFrom());
+		setRouteFromLng(route.getLongitudeFrom());
+		setRouteToLat(route.getLatitudeTo());
+		setRouteToLng(route.getLongitudeTo());
 		
 		TextView routeFrom = (TextView) findViewById(R.id.route_from_view);
 		routeFrom.append(route.getRouteFrom());
@@ -124,6 +171,8 @@ public class RouteView extends Activity {
 				}
 			}
 		}
+		
+		AsyncTask<Void, Void, String> getPoly = new GetPolyline(this, makeRouteUrl()).execute();
 	}
 	
 	private void joinDeclineRoute() {
@@ -142,7 +191,97 @@ public class RouteView extends Activity {
 			}
 		});
 		
-//		updateUI(route);
+//		getRouteDetails = new GetRouteDetails(this).execute();
+	}
+
+	public Double getRouteFromLat() {
+		return routeFromLat;
+	}
+
+	public void setRouteFromLat(Double routeFromLat) {
+		this.routeFromLat = routeFromLat;
+	}
+
+	public Double getRouteFromLng() {
+		return routeFromLng;
+	}
+
+	public void setRouteFromLng(Double routeFromLng) {
+		this.routeFromLng = routeFromLng;
+	}
+
+	public Double getRouteToLat() {
+		return routeToLat;
+	}
+
+	public void setRouteToLat(Double routeToLat) {
+		this.routeToLat = routeToLat;
+	}
+
+	public Double getRouteToLng() {
+		return routeToLng;
+	}
+
+	public void setRouteToLng(Double routeToLng) {
+		this.routeToLng = routeToLng;
+	}
+	
+	private String makeRouteUrl() {
+		StringBuilder urlString = new StringBuilder();
+		urlString.append("http://maps.googleapis.com/maps/api/directions/json");
+		urlString.append("?origin=");
+		urlString.append(getRouteFromLat().toString());
+		urlString.append(",");
+		urlString.append(getRouteFromLng().toString());
+		urlString.append("&destination=");
+		urlString.append(getRouteToLat().toString());
+		urlString.append(",");
+		urlString.append(getRouteToLng().toString());
+		urlString.append("&sensor=false&mode=driving&alternatives=true");
+		
+		return urlString.toString();
+	}
+	
+	private List<LatLng> decodePoly(String encoded) {
+
+	    List<LatLng> poly = new ArrayList<LatLng>();
+	    int index = 0, len = encoded.length();
+	    int lat = 0, lng = 0;
+
+	    while (index < len) {
+	        int b, shift = 0, result = 0;
+	        do {
+	            b = encoded.charAt(index++) - 63;
+	            result |= (b & 0x1f) << shift;
+	            shift += 5;
+	        } while (b >= 0x20);
+	        int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+	        lat += dlat;
+
+	        shift = 0;
+	        result = 0;
+	        do {
+	            b = encoded.charAt(index++) - 63;
+	            result |= (b & 0x1f) << shift;
+	            shift += 5;
+	        } while (b >= 0x20);
+	        int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+	        lng += dlng;
+
+	        LatLng p = new LatLng( (((double) lat / 1E5)),
+	                 (((double) lng / 1E5) ));
+	        poly.add(p);
+	    }
+
+	    return poly;
+	}
+
+	public String getPolylineResult() {
+		return polylineResult;
+	}
+
+	public void setPolylineResult(String polylineResult) {
+		this.polylineResult = polylineResult;
 	}
 
 }
