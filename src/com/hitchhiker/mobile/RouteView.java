@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hitchhiker.mobile.asynctasks.GetPolyline;
 import com.hitchhiker.mobile.asynctasks.GetRouteDetails;
-import com.hitchhiker.mobile.asynctasks.JoinRoute;
 import com.hitchhiker.mobile.objects.Route;
 import com.hitchhiker.mobile.tools.API;
 import com.parse.GetCallback;
@@ -23,6 +22,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,6 +41,7 @@ public class RouteView extends Activity {
 	public API api;
 	public Route route;
 	public AsyncTask<Void, Void, Void> getRouteDetails;
+	public AsyncTask<Void, Void, String> getPoly;
 	public ProgressDialog progressDialog;
 	private Button joinRoute;
 	
@@ -172,7 +173,7 @@ public class RouteView extends Activity {
 			}
 		}
 		
-		AsyncTask<Void, Void, String> getPoly = new GetPolyline(this, makeRouteUrl()).execute();
+		getPoly = new GetPolyline(this, makeRouteUrl()).execute();
 	}
 	
 	private void joinDeclineRoute() {
@@ -183,15 +184,17 @@ public class RouteView extends Activity {
 			@Override
 			public void done(ParseObject route, ParseException e) {
 				if (e == null) {
-					List<String> passengers = new ArrayList<String>();
-					passengers.add(ParseUser.getCurrentUser().getObjectId());
-					route.add("passengers", passengers);
-					route.saveInBackground();
+					route.add("passengers", ParseUser.getCurrentUser().getObjectId());
+					route.saveInBackground(new SaveCallback() {
+						
+						@Override
+						public void done(ParseException arg0) {
+							getRouteDetails = new GetRouteDetails(RouteView.this).execute();
+						}
+					});
 				}
 			}
 		});
-		
-//		getRouteDetails = new GetRouteDetails(this).execute();
 	}
 
 	public Double getRouteFromLat() {

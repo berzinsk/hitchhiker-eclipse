@@ -239,26 +239,6 @@ public class API {
 		return route;
 	}
 	
-	public void joinRoute(String routeId, String userId) {
-		HttpClient hclient = new DefaultHttpClient();
-		HttpPost hpost = new HttpPost("https://api.parse.com/1/classes/Routes/" + routeId);
-		
-		List<String> passengers = new ArrayList<String>();
-		passengers.add(userId);
-		
-		hpost.setHeader("X-Parse-Application-Id", APPLICATION_ID);
-		hpost.setHeader("X-Parse-REST-API-Key", REST_API_KEY);
-		
-		try {
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		
-//		passengers.add(ParseUser.getCurrentUser().getObjectId());
-	}
-	
 	private JSONObject getJSONObject(String url) {
 		
 		String json = this.getData(url);
