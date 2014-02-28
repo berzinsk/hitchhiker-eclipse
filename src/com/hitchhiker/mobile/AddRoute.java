@@ -160,17 +160,6 @@ public class AddRoute extends Activity {
 		});
 	}
 	
-	private void imageOnClickListener(ImageView imageView, final String hint, final TextView textView,
-			final Boolean numbers, final Boolean map) {
-		imageView.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				buildDialog(hint, textView, numbers, map);
-			}
-		});
-	}
-	
 	private void buildDialog(String hint, final TextView textView, boolean numbers, boolean map) {
 		final Dialog dialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
 		dialog.setContentView(R.layout.custom_dialog);
@@ -302,16 +291,10 @@ public class AddRoute extends Activity {
 		addPriceImage = (ImageView) findViewById(R.id.add_price_image);
 		addStopsImage = (ImageView) findViewById(R.id.add_stops_image);
 		
-//		routeFromText = (TextView) findViewById(R.id.add_from_result);
 		dateText = (TextView) findViewById(R.id.add_date_result);
-//		seatsText = (TextView) findViewById(R.id.add_seats_result);
-//		notesText = (TextView) findViewById(R.id.add_notes_result);
-//		routeToText = (TextView) findViewById(R.id.add_to_result);
 		timeText = (TextView) findViewById(R.id.add_time_result);
 		priceText = (EditText) findViewById(R.id.price_edittext);
 		seatsText = (EditText) findViewById(R.id.seats_eidttext);
-//		priceText = (TextView) findViewById(R.id.add_price_result);
-//		stopsText = (TextView) findViewById(R.id.add_stops_result);
 		
 		routeFromText = (AutoCompleteTextView) findViewById(R.id.route_from_edittext);
 		routeFromText.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item));
@@ -339,13 +322,6 @@ public class AddRoute extends Activity {
 			}
 		});
 		
-//		imageOnClickListener(addRoteFromImage, "Add route from", routeFromText, false, true);
-//		imageOnClickListener(addSeatsImage, "Add seats avaailable", seatsText, true, false);
-//		imageOnClickListener(addNotesImage, "Add notes", notesText, false, false);
-//		imageOnClickListener(addRouteToImage, "Add sroute to", routeToText, false, true);
-//		imageOnClickListener(addPriceImage, "Add price", priceText, true, false);
-//		imageOnClickListener(addStopsImage, "Add stops if any", stopsText, false, false);
-		
 	}
 	
 	private String getDepartureTime() {
@@ -367,7 +343,7 @@ public class AddRoute extends Activity {
 	}
 	
 	private static String convert(int c) {
-		if (c > 10) {
+		if (c > 9) {
 			return String.valueOf(c);
 		} else {
 			return "0" + String.valueOf(c);

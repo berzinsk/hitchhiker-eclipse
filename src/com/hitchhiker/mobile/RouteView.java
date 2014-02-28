@@ -75,7 +75,7 @@ public class RouteView extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				joinDeclineRoute();
+				joinDeclineRoute(true);
 			}
 		});
 	}
@@ -139,22 +139,28 @@ public class RouteView extends Activity {
 		setRouteToLng(route.getLongitudeTo());
 		
 		TextView routeFrom = (TextView) findViewById(R.id.route_from_view);
-		routeFrom.append(route.getRouteFrom());
+//		routeFrom.append(route.getRouteFrom());
+		routeFrom.setText(getResources().getString(R.string.from) + route.getRouteFrom());
 		
 		TextView routeTo = (TextView) findViewById(R.id.route_to_view);
-		routeTo.append(route.getRouteTo());
+//		routeTo.append(route.getRouteTo());
+		routeTo.setText(getResources().getString(R.string.to) + route.getRouteTo());
 		
 		TextView price = (TextView) findViewById(R.id.price_view);
-		price.append(String.valueOf(route.getPrice()));
+//		price.append(String.valueOf(route.getPrice()));
+		price.setText(getResources().getString(R.string.price_tag) + route.getPrice());
 		
 		TextView departureTime = (TextView) findViewById(R.id.departure_time_view);
-		departureTime.append(route.getDepartureTime());
+//		departureTime.append(route.getDepartureTime());
+		departureTime.setText(getResources().getString(R.string.time) + route.getDepartureTime());
 		
 		TextView departureDate = (TextView) findViewById(R.id.departure_date_view);
-		departureDate.append(route.getDepartureDate());
+//		departureDate.append(route.getDepartureDate());
+		departureDate.setText(getResources().getString(R.string.time) + route.getDepartureTime());
 		
 		TextView availableSeats = (TextView) findViewById(R.id.seats_view);
-		availableSeats.append(String.valueOf(route.getAvailableSeats()));
+//		availableSeats.append(String.valueOf(route.getAvailableSeats()));
+		availableSeats.setText(getResources().getString(R.string.seats) + route.getAvailableSeats());
 		
 		if (route.getPassengers() != null) {
 			for (int i = 0; i < route.getPassengers().size(); i++) {
@@ -164,9 +170,7 @@ public class RouteView extends Activity {
 						
 						@Override
 						public void onClick(View v) {
-							List<String> passengers = route.getPassengers();
-							passengers.remove(ParseUser.getCurrentUser().getObjectId());
-							
+							joinDeclineRoute(false);
 						}
 					});
 				}
@@ -176,7 +180,7 @@ public class RouteView extends Activity {
 		getPoly = new GetPolyline(this, makeRouteUrl()).execute();
 	}
 	
-	private void joinDeclineRoute() {
+	private void joinDeclineRoute(final boolean join) {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Routes");
 		
 		query.getInBackground(route.getId(), new GetCallback<ParseObject>() {
@@ -184,7 +188,13 @@ public class RouteView extends Activity {
 			@Override
 			public void done(ParseObject route, ParseException e) {
 				if (e == null) {
-					route.add("passengers", ParseUser.getCurrentUser().getObjectId());
+					if (join == true) {
+						route.add("passengers", ParseUser.getCurrentUser().getObjectId());
+						route.increment("availableSeats", -1);
+					} else {
+						
+					}
+					
 					route.saveInBackground(new SaveCallback() {
 						
 						@Override

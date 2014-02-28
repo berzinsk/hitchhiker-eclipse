@@ -48,6 +48,7 @@ public class AuthorizationView extends Activity {
 //		Crashlytics.start(this);
 		setContentView(R.layout.authorization);
 		ParseAnalytics.trackAppOpened(getIntent());
+		ParseInstallation.getCurrentInstallation().saveInBackground();
 		
 		SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
 		if (prefs.contains("userObjectId")) {
