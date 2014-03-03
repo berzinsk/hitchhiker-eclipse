@@ -74,7 +74,7 @@ public class RouteListAdapter extends BaseAdapter {
 		}
 		
 		// Should add to check device screen to display proper size profile picture
-		new GetUserPicture(tag.authorPicture).execute("http://graph.facebook.com/"+routes.get(index).getAuthorId()+"/picture");
+		new GetUserPicture(tag.authorPicture).execute("http://graph.facebook.com/"+routes.get(index).getAuthorId()+"/picture?height=100&type=normal&width=100");
 		tag.authorName.setText(routes.get(index).getAuthorName());
 		tag.routeFrom.setText(routes.get(index).getRouteFrom());
 		tag.routeTo.setText(routes.get(index).getRouteTo());

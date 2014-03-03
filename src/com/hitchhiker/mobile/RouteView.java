@@ -139,27 +139,21 @@ public class RouteView extends Activity {
 		setRouteToLng(route.getLongitudeTo());
 		
 		TextView routeFrom = (TextView) findViewById(R.id.route_from_view);
-//		routeFrom.append(route.getRouteFrom());
 		routeFrom.setText(getResources().getString(R.string.from) + route.getRouteFrom());
 		
 		TextView routeTo = (TextView) findViewById(R.id.route_to_view);
-//		routeTo.append(route.getRouteTo());
 		routeTo.setText(getResources().getString(R.string.to) + route.getRouteTo());
 		
 		TextView price = (TextView) findViewById(R.id.price_view);
-//		price.append(String.valueOf(route.getPrice()));
 		price.setText(getResources().getString(R.string.price_tag) + route.getPrice());
 		
 		TextView departureTime = (TextView) findViewById(R.id.departure_time_view);
-//		departureTime.append(route.getDepartureTime());
 		departureTime.setText(getResources().getString(R.string.time) + route.getDepartureTime());
 		
 		TextView departureDate = (TextView) findViewById(R.id.departure_date_view);
-//		departureDate.append(route.getDepartureDate());
 		departureDate.setText(getResources().getString(R.string.time) + route.getDepartureTime());
 		
 		TextView availableSeats = (TextView) findViewById(R.id.seats_view);
-//		availableSeats.append(String.valueOf(route.getAvailableSeats()));
 		availableSeats.setText(getResources().getString(R.string.seats) + route.getAvailableSeats());
 		
 		if (route.getPassengers() != null) {
@@ -171,6 +165,15 @@ public class RouteView extends Activity {
 						@Override
 						public void onClick(View v) {
 							joinDeclineRoute(false);
+						}
+					});
+				} else {
+					joinRoute.setText(getResources().getString(R.string.join));
+					joinRoute.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							joinDeclineRoute(true);
 						}
 					});
 				}
@@ -192,7 +195,14 @@ public class RouteView extends Activity {
 						route.add("passengers", ParseUser.getCurrentUser().getObjectId());
 						route.increment("availableSeats", -1);
 					} else {
-						
+						List<String> passengers = route.getList("passengers");
+						for (int i = 0; i < passengers.size(); i++) {
+							if (passengers.get(i).equals(ParseUser.getCurrentUser().getObjectId())) {
+								passengers.remove(i);
+							}
+						}
+						route.put("passengers", passengers);
+						route.increment("availableSeats");
 					}
 					
 					route.saveInBackground(new SaveCallback() {
