@@ -1,7 +1,5 @@
 package com.hitchhiker.mobile;
 
-import com.hitchhiker.mobile.asynctasks.TestNetwork;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -16,7 +14,7 @@ public class OfflineView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.offline_view);
 		
-		testNetwork = new TestNetwork(this).execute();
+		
 	}
 
 	@Override

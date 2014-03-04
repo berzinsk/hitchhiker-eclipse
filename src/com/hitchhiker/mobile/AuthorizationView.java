@@ -1,12 +1,12 @@
 package com.hitchhiker.mobile;
 
 import com.crashlytics.android.Crashlytics;
-import java.security.acl.Permission;
 import java.util.Arrays;
 
 import org.json.JSONObject;
 
-import android.os.AsyncTask;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -15,29 +15,21 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.beardedhen.bbutton.BootstrapButton;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
-import com.hitchhiker.mobile.asynctasks.TestNetwork;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseFacebookUtils.Permissions;
-import com.parse.ParseObject;
 import com.parse.ParseInstallation;
 import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
-import com.parse.PushService;
 
 public class AuthorizationView extends Activity {
-	
-	public AsyncTask<Void, Void, Void> testNetwork;
 	
 	BootstrapButton facebookLogin;
 	BootstrapButton twitterLogin;
@@ -50,29 +42,42 @@ public class AuthorizationView extends Activity {
 		ParseAnalytics.trackAppOpened(getIntent());
 		ParseInstallation.getCurrentInstallation().saveInBackground();
 		
-		SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
-		if (prefs.contains("userObjectId")) {
-			startActivity(new Intent(AuthorizationView.this, RouteList.class));
+		if (testNetwork() == false) {
+			startActivity(new Intent(this, OfflineView.class));
+		} else {
+			SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
+			if (prefs.contains("userObjectId")) {
+				startActivity(new Intent(AuthorizationView.this, RouteList.class));
+			}
+			
+			facebookLogin = (BootstrapButton) findViewById(R.id.login_facebook);
+			twitterLogin = (BootstrapButton) findViewById(R.id.login_twitter);
+			
+			twitterLogin.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					twitterLogin();
+				}
+			});
+			
+			facebookLogin.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					facebookLogin();
+				}
+			});
 		}
+	}
+	
+	public boolean testNetwork() {
+		NetworkInfo info = ((ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 		
-		facebookLogin = (BootstrapButton) findViewById(R.id.login_facebook);
-		twitterLogin = (BootstrapButton) findViewById(R.id.login_twitter);
-		
-		twitterLogin.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				twitterLogin();
-			}
-		});
-		
-		facebookLogin.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				facebookLogin();
-			}
-		});
+		if (info == null || !info.isConnected()) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -147,11 +152,4 @@ public class AuthorizationView extends Activity {
 			});
 		}
 	}
-
-//	@Override
-//	protected void onResume() {
-//		super.onResume();
-//		
-//		testNetwork = new TestNetwork(this).execute();
-//	}
 }

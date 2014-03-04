@@ -9,20 +9,13 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.hitchhiker.mobile.adapters.RouteListAdapter;
 import com.hitchhiker.mobile.asynctasks.GetRouteList;
-import com.hitchhiker.mobile.asynctasks.TestNetwork;
 import com.hitchhiker.mobile.objects.Route;
 import com.hitchhiker.mobile.tools.API;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -44,8 +37,6 @@ public class RouteList extends Activity {
 	public AsyncTask<Void, Void, Void> getRouteList;
 	public List<Route> routes = new ArrayList<Route>();
 	public ProgressDialog progressDialog;
-	
-	public AsyncTask<Void, Void, Void> testNetwork;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +148,6 @@ public class RouteList extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		testNetwork = new TestNetwork(this).execute();
 		
 		getRouteList();
 	}
