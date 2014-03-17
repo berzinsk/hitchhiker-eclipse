@@ -46,7 +46,7 @@ public class AuthorizationView extends Activity {
 			startActivity(new Intent(this, OfflineView.class));
 		} else {
 			SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
-			if (prefs.contains("userObjectId")) {
+			if (prefs.contains("twitterObjectId") || prefs.contains("facebookObjectId")) {
 				startActivity(new Intent(AuthorizationView.this, RouteList.class));
 			}
 			
@@ -102,7 +102,7 @@ public class AuthorizationView extends Activity {
 					
 				} else {
 					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
-					editor.putString("userObjectId", user.getObjectId());
+					editor.putString("twitterObjectId", user.getObjectId());
 					editor.commit();
 					startActivity(new Intent(AuthorizationView.this, RouteList.class));
 				}
@@ -121,7 +121,7 @@ public class AuthorizationView extends Activity {
 				} else if (user != null) {
 					makeMeRequest();
 					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
-					editor.putString("userObjectId", user.getObjectId());
+					editor.putString("facebookObjectId", user.getObjectId());
 					editor.commit();
 					startActivity(new Intent(AuthorizationView.this, RouteList.class));
 				}

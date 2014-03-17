@@ -52,6 +52,8 @@ public class API {
 	private double lat;
 	private double lng;
 	private String city;
+	private String streetNumber;
+	private String street;
 	
 	
 	/**
@@ -97,6 +99,19 @@ public class API {
 					
 					if (types.getString("types").contains("locality")) {
 						setCity(city.getJSONObject(j).getString("short_name"));
+						Log.d("LOCALITY", city.getJSONObject(j).getString("short_name"));
+					}
+					
+					if (types.getString("types").contains("street_number")) {
+						setStreetNumber(city.getJSONObject(j).getString("short_name"));
+					}
+					
+					if (types.getString("types").contains("route")) {
+						setStreet(city.getJSONObject(j).getString("short_name"));
+						Log.d("contains route", "contains route");
+					} else if (types.getString("types").contains("establishment")) {
+						setStreet(city.getJSONObject(j).getString("short_name"));
+						Log.d("contains establishment", "contains establishment");
 					}
 				}
 			}
@@ -178,11 +193,11 @@ public class API {
 			}
 			
 			if (data.has("routeFrom")) {
-				route.setRouteFrom(data.getString("routeFrom"));
+				route.setRouteFrom(data.getString("locationFrom"));
 			}
 			
 			if (data.has("routeTo")) {
-				route.setRouteTo(data.getString("routeTo"));
+				route.setRouteTo(data.getString("locationTo"));
 			}
 			
 			if (data.has("distance")) {
@@ -479,5 +494,21 @@ public String getPolyData(String url) {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public String getStreetNumber() {
+		return streetNumber;
+	}
+
+	public void setStreetNumber(String streetNumber) {
+		this.streetNumber = streetNumber;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
 	}
 }

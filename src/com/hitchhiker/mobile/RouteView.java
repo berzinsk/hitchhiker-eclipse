@@ -151,33 +151,45 @@ public class RouteView extends Activity {
 		departureTime.setText(getResources().getString(R.string.time) + route.getDepartureTime());
 		
 		TextView departureDate = (TextView) findViewById(R.id.departure_date_view);
-		departureDate.setText(getResources().getString(R.string.time) + route.getDepartureTime());
+		departureDate.setText(getResources().getString(R.string.date) + route.getDepartureDate());
 		
 		TextView availableSeats = (TextView) findViewById(R.id.seats_view);
 		availableSeats.setText(getResources().getString(R.string.seats) + route.getAvailableSeats());
 		
 		if (route.getPassengers() != null) {
-			for (int i = 0; i < route.getPassengers().size(); i++) {
-				if (route.getPassengers().get(i).contains(ParseUser.getCurrentUser().getObjectId())) {
-					joinRoute.setText(getResources().getString(R.string.decline));
-					joinRoute.setOnClickListener(new View.OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							joinDeclineRoute(false);
-						}
-					});
-				} else {
-					joinRoute.setText(getResources().getString(R.string.join));
-					joinRoute.setOnClickListener(new View.OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							joinDeclineRoute(true);
-						}
-					});
+			if (!route.getPassengers().isEmpty()) {
+				for (int i = 0; i < route.getPassengers().size(); i++) {
+					if (route.getPassengers().get(i).contains(ParseUser.getCurrentUser().getObjectId())) {
+						joinRoute.setText(getResources().getString(R.string.decline));
+						joinRoute.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								joinDeclineRoute(false);
+							}
+						});
+					} else {
+						joinRoute.setText(getResources().getString(R.string.join));
+						joinRoute.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								joinDeclineRoute(true);
+							}
+						});
+					}
 				}
+			} else {
+				joinRoute.setText(getResources().getString(R.string.join));
+				joinRoute.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						joinDeclineRoute(true);
+					}
+				});
 			}
+			
 		}
 		
 		getPoly = new GetPolyline(this, makeRouteUrl()).execute();
@@ -306,5 +318,4 @@ public class RouteView extends Activity {
 	public void setPolylineResult(String polylineResult) {
 		this.polylineResult = polylineResult;
 	}
-
 }

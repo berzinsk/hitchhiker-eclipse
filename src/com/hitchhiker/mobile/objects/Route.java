@@ -19,6 +19,8 @@ public class Route {
 	private double lngFrom;
 	private double latTo;
 	private double lngTo;
+	private String streetFrom;
+	private String streetTo;
 	
 	public Route() {
 	}
@@ -186,5 +188,21 @@ public class Route {
 	
 	public synchronized Double getLongitudeTo() {
 		return this.lngTo;
+	}
+
+	public String getStreetFrom() {
+		return streetFrom;
+	}
+
+	public void setStreetFrom(String streetFrom) {
+		this.streetFrom = streetFrom;
+	}
+
+	public String getStreetTo() {
+		return streetTo;
+	}
+
+	public void setStreetTo(String streetTo) {
+		this.streetTo = streetTo;
 	}
 }
