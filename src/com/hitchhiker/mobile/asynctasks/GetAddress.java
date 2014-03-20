@@ -48,8 +48,10 @@ public class GetAddress extends AsyncTask<Void, Void, Void> {
 			view.setFromCity(city);
 			if (streetNumber != null) {
 				view.setLocationFrom(street + " " + streetNumber);
-			} else {
+			} else if (street != null) {
 				view.setLocationFrom(street);
+			} else {
+				view.setLocationFrom(city);
 			}
 			
 		} else {
@@ -58,8 +60,10 @@ public class GetAddress extends AsyncTask<Void, Void, Void> {
 			view.setToCity(city);
 			if (streetNumber != null) {
 				view.setLocationTo(street + " " + streetNumber);
-			} else {
+			} else if (street != null) {
 				view.setLocationTo(street);
+			} else {
+				view.setLocationTo(city);
 			}
 		}
 		

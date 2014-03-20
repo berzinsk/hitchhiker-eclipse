@@ -196,6 +196,10 @@ public class RouteView extends Activity {
 	}
 	
 	private void joinDeclineRoute(final boolean join) {
+		
+		progressDialog = ProgressDialog.show(RouteView.this, null, getResources().getString(R.string.loading), true);
+		progressDialog.setCancelable(true);
+		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Routes");
 		
 		query.getInBackground(route.getId(), new GetCallback<ParseObject>() {
@@ -221,6 +225,7 @@ public class RouteView extends Activity {
 						
 						@Override
 						public void done(ParseException arg0) {
+							progressDialog.dismiss();
 							getRouteDetails = new GetRouteDetails(RouteView.this).execute();
 						}
 					});
