@@ -28,10 +28,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="32dp"
         android:text="@string/login_with_twitter"
-        android:visibility="gone"
         androidbootstrap:roundedCorners="true"
         androidbootstrap:size="default"
-        androidbootstrap:type="primary" >
+        androidbootstrap:type="primary"
+        android:visibility="gone" >
     </com.beardedhen.bbutton.BootstrapButton>
 
 </RelativeLayout>

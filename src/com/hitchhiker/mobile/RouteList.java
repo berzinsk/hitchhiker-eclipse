@@ -11,17 +11,11 @@ import com.hitchhiker.mobile.adapters.RouteListAdapter;
 import com.hitchhiker.mobile.asynctasks.GetRouteList;
 import com.hitchhiker.mobile.objects.Route;
 import com.hitchhiker.mobile.tools.API;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -55,6 +49,8 @@ public class RouteList extends Activity {
 		}
 		
 		setContentView(R.layout.route_list);
+		
+		Log.d("AAAAAAA", "AAAAAAA");
 		
 		progressDialog = ProgressDialog.show(RouteList.this, null, getResources().getString(R.string.loading), true);
 		progressDialog.setCancelable(true);
@@ -103,6 +99,7 @@ public class RouteList extends Activity {
 	}
 	
 	private void getRouteList() {
+		Log.d("GETROUTELIST", "GETROUTELIST");
 		getRouteList = new GetRouteList(this, true).execute();
 	}
 	
@@ -142,33 +139,16 @@ public class RouteList extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
     	if (keyCode == KeyEvent.KEYCODE_BACK) {
-    		Builder alert = new AlertDialog.Builder(this);
-    		alert.setTitle(getResources().getString(R.string.app_name));
-    		alert.setMessage("Are you sure you want to quit?");
-    		
-    		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-    			
-    			@Override
-    			public void onClick(DialogInterface dialog, int which) {
-    				moveTaskToBack(true);
-    			}
-    		});
-    		
-    		alert.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-			});
-    		
-    		try {
-				alert.show();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-    		
+    		moveTaskToBack(true);
     		return true;
     	}
     	return super.onKeyDown(keyCode, event);
     }
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		getRouteList();
+	}
 }
