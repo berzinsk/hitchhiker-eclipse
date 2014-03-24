@@ -184,8 +184,14 @@ public class API {
 				return null;
 			}
 			
+			Log.d("Route detail JSON DATA RECEIVED", data.toString());
+			
 			if (data.has("authorId")) {
 				route.setAuthorId(data.getString("authorId"));
+			}
+			
+			if (data.has("user")) {
+				route.setUserId(data.getJSONObject("user").getString("objectId"));
 			}
 			
 			if (data.has("authorName")) {
@@ -276,9 +282,9 @@ public class API {
 		}
 	}
 	
-public String getPolyData(String url) {
+	public String getPolyData(String url) {
 	
-	Log.d("URRRLLLLL", url);
+		Log.d("URRRLLLLL", url);
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		
@@ -322,7 +328,7 @@ public String getPolyData(String url) {
 		}
 		
 		String result = stringBuilder.toString().trim();
-		Log.d("RESULT FROM GOOGLE", result);
+//		Log.d("RESULT FROM GOOGLE", result);
 		return result;
 	}
 	

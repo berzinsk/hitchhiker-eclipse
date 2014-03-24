@@ -129,6 +129,7 @@ public class AddRoute extends Activity {
 					route.put("cityTo", getToCity());
 					route.put("locationFrom", getLocationFrom());
 					route.put("locationTo", getLocationTo());
+					route.put("user", ParseUser.getCurrentUser());
 					
 					route.saveInBackground();
 					

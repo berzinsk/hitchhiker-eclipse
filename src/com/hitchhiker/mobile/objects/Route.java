@@ -21,6 +21,7 @@ public class Route {
 	private double lngTo;
 	private String streetFrom;
 	private String streetTo;
+	private String userId;
 	
 	public Route() {
 	}
@@ -57,6 +58,11 @@ public class Route {
 	
 	public synchronized Route setId(String id) {
 		this.id = id;
+		return this;
+	}
+	
+	public synchronized Route setUserId(String userId) {
+		this.userId = userId;
 		return this;
 	}
 	
@@ -132,6 +138,10 @@ public class Route {
 	
 	public synchronized String getId() {
 		return this.id;
+	}
+	
+	public synchronized String getUserId() {
+		return this.userId;
 	}
 	
 	public synchronized String getAuthorId() {

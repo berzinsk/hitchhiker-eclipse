@@ -24,6 +24,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.PushService;
 import com.parse.ParseFacebookUtils.Permissions;
 import com.parse.ParseInstallation;
 import com.parse.ParseTwitterUtils;
@@ -33,14 +34,16 @@ public class AuthorizationView extends Activity {
 	
 	BootstrapButton facebookLogin;
 	BootstrapButton twitterLogin;
+	ParseInstallation installation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Crashlytics.start(this);
+//		Crashlytics.start(this);
 		setContentView(R.layout.authorization);
 		ParseAnalytics.trackAppOpened(getIntent());
-		ParseInstallation.getCurrentInstallation().saveInBackground();
+		PushService.setDefaultPushCallback(this, AuthorizationView.class);
+		installation = ParseInstallation.getCurrentInstallation();
 		
 		if (testNetwork() == false) {
 			startActivity(new Intent(this, OfflineView.class));
@@ -123,6 +126,8 @@ public class AuthorizationView extends Activity {
 					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
 					editor.putString("facebookObjectId", user.getObjectId());
 					editor.commit();
+					installation.put("user", ParseUser.getCurrentUser());
+					installation.saveInBackground();
 					startActivity(new Intent(AuthorizationView.this, RouteList.class));
 				}
 			}

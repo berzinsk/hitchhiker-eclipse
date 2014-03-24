@@ -19,10 +19,13 @@ import com.hitchhiker.mobile.objects.Route;
 import com.hitchhiker.mobile.tools.API;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,6 +52,7 @@ public class RouteView extends Activity {
 	private Double routeFromLng;
 	private Double routeToLat;
 	private Double routeToLng;
+	private String routeUserId;
 	
 	private String polylineResult;
 
@@ -90,14 +94,12 @@ public class RouteView extends Activity {
 	@SuppressLint("NewApi")
 	public void addMap(String result) {
 		
-		Log.d("JSON FRMO GOOGLE", result);
-		
 		GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 		
 		LatLng routeFrom = new LatLng(getRouteFromLat(), getRouteFromLng());
 		LatLng routeTo = new LatLng(getRouteToLat(), getRouteToLng());
 		
-		map.setMyLocationEnabled(true);
+//		map.setMyLocationEnabled(true);
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(routeFrom, 6));
 		
 		map.addMarker(new MarkerOptions()
@@ -137,6 +139,7 @@ public class RouteView extends Activity {
 		setRouteFromLng(route.getLongitudeFrom());
 		setRouteToLat(route.getLatitudeTo());
 		setRouteToLng(route.getLongitudeTo());
+		setRouteUserId(route.getUserId());
 		
 		TextView routeFrom = (TextView) findViewById(R.id.route_from_view);
 		routeFrom.setText(getResources().getString(R.string.from) + route.getRouteFrom());
@@ -207,7 +210,7 @@ public class RouteView extends Activity {
 			@Override
 			public void done(ParseObject route, ParseException e) {
 				if (e == null) {
-					if (join == true) {
+					if (join) {
 						route.add("passengers", ParseUser.getCurrentUser().getObjectId());
 						route.increment("availableSeats", -1);
 					} else {
@@ -225,6 +228,12 @@ public class RouteView extends Activity {
 						
 						@Override
 						public void done(ParseException arg0) {
+							if (join) {
+								sendPush(getRouteUserId(), true);
+							} else {
+								sendPush(getRouteUserId(), false);
+							}
+							
 							progressDialog.dismiss();
 							getRouteDetails = new GetRouteDetails(RouteView.this).execute();
 						}
@@ -232,6 +241,31 @@ public class RouteView extends Activity {
 				}
 			}
 		});
+	}
+	
+	private void sendPush(String userId, boolean join) {
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		String name = null;
+		try {
+			name = currentUser.getJSONObject("profile").getString("name");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
+		pushQuery.whereEqualTo("user", ParseObject.createWithoutData("_User", userId));
+		
+		ParsePush push = new ParsePush();
+		push.setQuery(pushQuery);
+		
+		if (join && name != null) {
+			push.setMessage(name + " just joined your route.");
+		} else if (!join && name != null) {
+			push.setMessage(name + " just abandoned the route.");
+		}
+		
+		push.sendInBackground();
 	}
 
 	public Double getRouteFromLat() {
@@ -322,5 +356,13 @@ public class RouteView extends Activity {
 
 	public void setPolylineResult(String polylineResult) {
 		this.polylineResult = polylineResult;
+	}
+
+	public String getRouteUserId() {
+		return routeUserId;
+	}
+
+	public void setRouteUserId(String routeUserId) {
+		this.routeUserId = routeUserId;
 	}
 }
