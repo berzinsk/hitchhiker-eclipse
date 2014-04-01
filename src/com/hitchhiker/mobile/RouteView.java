@@ -33,7 +33,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -140,6 +139,10 @@ public class RouteView extends Activity {
 		setRouteToLat(route.getLatitudeTo());
 		setRouteToLng(route.getLongitudeTo());
 		setRouteUserId(route.getUserId());
+		
+		if (getRouteUserId().equals(ParseUser.getCurrentUser().getObjectId())) {
+			joinRoute.setVisibility(View.GONE);
+		}
 		
 		TextView routeFrom = (TextView) findViewById(R.id.route_from_view);
 		routeFrom.setText(getResources().getString(R.string.from) + route.getRouteFrom());

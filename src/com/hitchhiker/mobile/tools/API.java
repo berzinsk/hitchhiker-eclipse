@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import com.google.android.gms.internal.fo;
 import com.hitchhiker.mobile.objects.Route;
+import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
 import com.parse.entity.mime.content.StringBody;
 
@@ -54,6 +55,8 @@ public class API {
 	private String city;
 	private String streetNumber;
 	private String street;
+	private String twitterName;
+	private String twitterImage;
 	
 	
 	/**
@@ -72,6 +75,8 @@ public class API {
 	}
 	
 	public double location(String address) {
+		setStreet(null);
+		setStreetNumber(null);
 		
 		String formatedAddress = address.replace(" ", "%20");
 		String formatedAddress2 = formatedAddress.replaceAll("\"|\"", "");
@@ -80,7 +85,7 @@ public class API {
 		Log.d("Addresss calll", url);
 		JSONObject object;
 		try {
-			object = getJSONObject(url);
+			object = getJSONObject(url, false);
 			
 			JSONArray data = null;
 			if (object.has("results")) {
@@ -134,7 +139,7 @@ public class API {
 		
 		JSONObject object = null;
 		try {
-			object = getJSONObject(url);
+			object = getJSONObject(url, false);
 			
 			if (object == null) {
 				return null;
@@ -167,6 +172,26 @@ public class API {
 		return routes;
 	}
 	
+	public void getTwitterCredentials(String screenName) {
+		String url = "https://api.twitter.com/1.1/users/show.json?screen_name=" + screenName;
+		
+		JSONObject data;
+		
+		try {
+			data = getJSONObject(url, true);
+			
+			if (data.has("name")) {
+				setTwitterName(data.getString("name"));
+			}
+			
+			if (data.has("profile_image_url_https")) {
+				setTwitterImage(data.getString("profile_image_url_https"));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
 	public Route getRouteDetails(String id) {
 		
 		Route route = new Route();
@@ -174,7 +199,7 @@ public class API {
 		
 		JSONObject data;
 		try {
-			data = getJSONObject(url);
+			data = getJSONObject(url, false);
 			
 			if (data == null) {
 				return null;
@@ -260,9 +285,13 @@ public class API {
 		return route;
 	}
 	
-	private JSONObject getJSONObject(String url) {
-		
-		String json = this.getData(url);
+	private JSONObject getJSONObject(String url, boolean twitter) {
+		String json = null;
+		if (twitter) {
+			json = this.getTwitterInfo(url);
+		} else {
+			json = this.getData(url);
+		}
 		
 		try {
 			return new JSONObject(json);
@@ -332,6 +361,52 @@ public class API {
 		return result;
 	}
 	
+	public String getTwitterInfo(String url) {
+		StringBuilder stringBuilder = new StringBuilder();
+		Log.d("URLLLL", url);
+		
+		try {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet verifyGet = new HttpGet(url);
+			ParseTwitterUtils.getTwitter().signRequest(verifyGet);
+			HttpEntity entity = null;
+			try {
+				HttpResponse response = client.execute(verifyGet);
+				entity = response.getEntity();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			if (entity != null) {
+				InputStream inputstream = null;
+				inputstream = entity.getContent();
+				
+				try {
+					BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream));
+					String line = null;
+					
+					while ((line = reader.readLine()) != null) {
+						stringBuilder.append(line + "\n");
+					}
+					
+					reader.close();
+				} catch (Exception e) {
+					// TODO: handle exception
+				} finally {
+					inputstream.close();
+				}
+				
+				client.getConnectionManager().shutdown();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		String result = stringBuilder.toString().trim();
+		Log.d("GET DATAAAA RETURNED", result);
+		return result;
+	}
+	
 	public String getData(String url) {
 		
 		StringBuilder stringBuilder = new StringBuilder();
@@ -379,6 +454,7 @@ public class API {
 		}
 		
 		String result = stringBuilder.toString().trim();
+		Log.d("GET DATAAAA RETURNED", result);
 		return result;
 	}
 	
@@ -516,5 +592,21 @@ public class API {
 
 	public void setStreet(String street) {
 		this.street = street;
+	}
+
+	public String getTwitterName() {
+		return twitterName;
+	}
+
+	public void setTwitterName(String twitterName) {
+		this.twitterName = twitterName;
+	}
+
+	public String getTwitterImage() {
+		return twitterImage;
+	}
+
+	public void setTwitterImage(String twitterImage) {
+		this.twitterImage = twitterImage;
 	}
 }

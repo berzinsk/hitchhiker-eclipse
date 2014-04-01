@@ -7,12 +7,14 @@ import org.json.JSONObject;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
@@ -20,6 +22,8 @@ import com.beardedhen.bbutton.BootstrapButton;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
+import com.hitchhiker.mobile.asynctasks.GetTwitterCredentials;
+import com.hitchhiker.mobile.tools.API;
 import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -35,11 +39,24 @@ public class AuthorizationView extends Activity {
 	BootstrapButton facebookLogin;
 	BootstrapButton twitterLogin;
 	ParseInstallation installation;
+	
+	public AuthorizationView view = this;
+	
+	public API api;
+	
+	AsyncTask<Void, Void, Void> twitterImg;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		Crashlytics.start(this);
+		
+		try {
+			api = new API(this, getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		setContentView(R.layout.authorization);
 		ParseAnalytics.trackAppOpened(getIntent());
 		PushService.setDefaultPushCallback(this, AuthorizationView.class);
@@ -107,6 +124,7 @@ public class AuthorizationView extends Activity {
 					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
 					editor.putString("twitterObjectId", user.getObjectId());
 					editor.commit();
+					twitterImg = new GetTwitterCredentials(view, ParseTwitterUtils.getTwitter().getScreenName(), user).execute();
 					startActivity(new Intent(AuthorizationView.this, RouteList.class));
 				}
 			}

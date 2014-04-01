@@ -68,6 +68,7 @@
         <meta-data
     		android:name="com.google.android.maps.v2.API_KEY"
     		android:value="AIzaSyCul7Y4c0eSfMKy-M1GcuNIOVx4mk9Hrr8"/>
+    		<!-- android:value="AIzaSyCul7Y4c0eSfMKy-M1GcuNIOVx4mk9Hrr8"/> testing key -->
     		<!-- android:value="AIzaSyAo6pMYAs1HsOoy4bwjJHFLTO7Sg7HYYhA"/> production key -->
 			<!-- <dev key  -->
         <activity

@@ -12,6 +12,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -101,6 +102,7 @@ public class AddRoute extends Activity {
 		initializeFields();
 		
 		postButton = (Button) findViewById(R.id.button_post);
+		final SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
 		postButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -114,12 +116,9 @@ public class AddRoute extends Activity {
 					ParseObject route = new ParseObject("Routes");
 					route.put("routeFrom", routeFromText.getText().toString());
 					route.put("routeTo", routeToText.getText().toString());
-					route.put("distance", 104L);
 					route.put("departureTime", getDepartureTime());
 					route.put("departureDate", getDepartureDate());
 					route.put("price", Double.valueOf(priceText.getText().toString()));
-					route.put("authorId", userFacebookId());
-					route.put("authorName", userFacebookName());
 					route.put("availableSeats", Integer.parseInt(seatsText.getText().toString()));
 					route.put("latFrom", getFromLatitude());
 					route.put("lngFrom", getFromLongitude());
@@ -130,6 +129,16 @@ public class AddRoute extends Activity {
 					route.put("locationFrom", getLocationFrom());
 					route.put("locationTo", getLocationTo());
 					route.put("user", ParseUser.getCurrentUser());
+					
+					if (prefs.contains("facebookObjectId")) {
+						route.put("authorId", userFacebookId());
+						route.put("authorName", userFacebookName());
+						route.put("userProfileImage", "");
+					} else if (prefs.contains("twitterObjectId")) {
+						route.put("authorId", "100000930704817");
+						route.put("authorName", userTwitterName());
+						route.put("userProfileImage", userTwitterImage());
+					}
 					
 					route.saveInBackground();
 					
@@ -229,6 +238,36 @@ public class AddRoute extends Activity {
 			try {
 				if (userProfile.getString("name") != null) {
 					return userProfile.getString("name").toString();
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+	
+	private String userTwitterName() {
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if (currentUser.get("profile") != null) {
+			JSONObject userProfile = currentUser.getJSONObject("profile");
+			try {
+				if (userProfile.getString("twitterName") != null) {
+					return userProfile.getString("twitterName").toString();
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+	
+	private String userTwitterImage() {
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if (currentUser.get("profile") != null) {
+			JSONObject userProfile = currentUser.getJSONObject("profile");
+			try {
+				if (userProfile.getString("twitterImage") != null) {
+					return userProfile.getString("twitterImage").toString();
 				}
 			} catch (Exception e) {
 				// TODO: handle exception

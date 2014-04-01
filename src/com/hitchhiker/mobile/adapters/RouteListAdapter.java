@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.nfc.Tag;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,9 @@ public class RouteListAdapter extends BaseAdapter {
 		}
 		
 		// Should add to check device screen to display proper size profile picture
-		new GetUserPicture(tag.authorPicture).execute("http://graph.facebook.com/"+routes.get(index).getAuthorId()+"/picture?height=100&type=normal&width=100");
+		
+		Log.d("Profile picture AUTHOR IDDDD", routes.get(index).getAuthorId());
+		new GetUserPicture(tag.authorPicture).execute("https://graph.facebook.com/"+routes.get(index).getAuthorId()+"/picture?height=100&type=normal&width=100");
 		tag.authorName.setText(routes.get(index).getAuthorName());
 		tag.routeFrom.setText(routes.get(index).getRouteFrom());
 		tag.routeTo.setText(routes.get(index).getRouteTo());
