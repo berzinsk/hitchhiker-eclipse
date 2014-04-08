@@ -162,7 +162,7 @@ public class API {
 				route = new Route(data.getJSONObject(i).getString("objectId"),
 						data.getJSONObject(i).getString("cityFrom"),
 						data.getJSONObject(i).getString("cityTo"),
-						data.getJSONObject(i).getString("authorId"),
+						data.getJSONObject(i).getString("userProfileImage"),
 						data.getJSONObject(i).getString("authorName"));
 				routes.add(route);
 			}
@@ -210,10 +210,6 @@ public class API {
 			}
 			
 			Log.d("Route detail JSON DATA RECEIVED", data.toString());
-			
-			if (data.has("authorId")) {
-				route.setAuthorId(data.getString("authorId"));
-			}
 			
 			if (data.has("user")) {
 				route.setUserId(data.getJSONObject("user").getString("objectId"));

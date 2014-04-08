@@ -7,7 +7,6 @@ import com.hitchhiker.mobile.RouteList;
 import com.hitchhiker.mobile.objects.Route;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class GetRouteList extends AsyncTask<Void, Void, Void> {
 	
@@ -17,14 +16,12 @@ public class GetRouteList extends AsyncTask<Void, Void, Void> {
 	List<Route> routes = new ArrayList<Route>();
 	
 	public GetRouteList(RouteList view, boolean pullToRefresh) {
-		Log.d("BAAACK", "BAAAACK");
 		this.view = view;
 		this.pullToRefresh = pullToRefresh;
 	}
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		Log.d("IZPILDAA", "IZPILDAA");
 		try {
 			view.routes = view.api.getRouteList();
 		} catch (Exception e) {

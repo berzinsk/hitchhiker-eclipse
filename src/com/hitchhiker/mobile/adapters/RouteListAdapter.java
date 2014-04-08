@@ -1,21 +1,14 @@
 package com.hitchhiker.mobile.adapters;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
-import com.facebook.widget.ProfilePictureView;
 import com.hitchhiker.mobile.R;
 import com.hitchhiker.mobile.asynctasks.GetUserPicture;
 import com.hitchhiker.mobile.objects.Route;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.nfc.Tag;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,10 +67,7 @@ public class RouteListAdapter extends BaseAdapter {
 			tag = (Tag) view.getTag();
 		}
 		
-		// Should add to check device screen to display proper size profile picture
-		
-		Log.d("Profile picture AUTHOR IDDDD", routes.get(index).getAuthorId());
-		new GetUserPicture(tag.authorPicture).execute("https://graph.facebook.com/"+routes.get(index).getAuthorId()+"/picture?height=100&type=normal&width=100");
+		new GetUserPicture(tag.authorPicture).execute(routes.get(index).getImageUrl());
 		tag.authorName.setText(routes.get(index).getAuthorName());
 		tag.routeFrom.setText(routes.get(index).getRouteFrom());
 		tag.routeTo.setText(routes.get(index).getRouteTo());

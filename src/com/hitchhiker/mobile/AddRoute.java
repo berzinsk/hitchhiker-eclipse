@@ -131,11 +131,10 @@ public class AddRoute extends Activity {
 					route.put("user", ParseUser.getCurrentUser());
 					
 					if (prefs.contains("facebookObjectId")) {
-						route.put("authorId", userFacebookId());
 						route.put("authorName", userFacebookName());
-						route.put("userProfileImage", "");
+						route.put("userProfileImage", 
+								"https://graph.facebook.com/"+userFacebookId()+"/picture?height=73&type=normal&width=73");
 					} else if (prefs.contains("twitterObjectId")) {
-						route.put("authorId", "100000930704817");
 						route.put("authorName", userTwitterName());
 						route.put("userProfileImage", userTwitterImage());
 					}

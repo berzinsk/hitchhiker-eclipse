@@ -5,7 +5,7 @@ import java.util.List;
 public class Route {
 	
 	private String id;
-	private String authorId;
+	private String imageUrl;
 	private String authorName;
 	private String routeFrom;
 	private String routeTo;
@@ -30,9 +30,9 @@ public class Route {
 		this.id = id;
 	}
 	
-	public Route(String id, String authorId) {
+	public Route(String id, String imageUrl) {
 		this.id = id;
-		this.authorId = authorId;
+		this.imageUrl = imageUrl;
 	}
 	
 	public Route(String id, String routeFrom, String routeTo) {
@@ -41,18 +41,18 @@ public class Route {
 		this.routeTo = routeTo;
 	}
 	
-	public Route(String id, String routeFrom, String routeTo, String authorId) {
+	public Route(String id, String routeFrom, String routeTo, String imageUrl) {
 		this.id = id;
 		this.routeFrom = routeFrom;
 		this.routeTo = routeTo;
-		this.authorId = authorId;
+		this.imageUrl = imageUrl;
 	}
 	
-	public Route(String id, String routeFrom, String routeTo, String authorId, String authorName) {
+	public Route(String id, String routeFrom, String routeTo, String imageUrl, String authorName) {
 		this.id = id;
 		this.routeFrom = routeFrom;
 		this.routeTo = routeTo;
-		this.authorId = authorId;
+		this.imageUrl = imageUrl;
 		this.authorName = authorName;
 	}
 	
@@ -66,8 +66,8 @@ public class Route {
 		return this;
 	}
 	
-	public synchronized Route setAuthorId(String authorId) {
-		this.authorId = authorId;
+	public synchronized Route setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 		return this;
 	}
 	
@@ -144,8 +144,8 @@ public class Route {
 		return this.userId;
 	}
 	
-	public synchronized String getAuthorId() {
-		return this.authorId;
+	public synchronized String getImageUrl() {
+		return this.imageUrl;
 	}
 	
 	public synchronized String getAuthorName() {

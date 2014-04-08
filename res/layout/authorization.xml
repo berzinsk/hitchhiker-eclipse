@@ -33,4 +33,13 @@
         androidbootstrap:type="primary" >
     </com.beardedhen.bbutton.BootstrapButton>
 
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/login_google_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_facebook"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true" >
+    </com.google.android.gms.common.SignInButton>
+
 </RelativeLayout>

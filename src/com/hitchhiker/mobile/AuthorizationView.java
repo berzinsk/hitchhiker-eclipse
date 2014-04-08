@@ -22,6 +22,8 @@ import com.beardedhen.bbutton.BootstrapButton;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.hitchhiker.mobile.asynctasks.GetTwitterCredentials;
 import com.hitchhiker.mobile.tools.API;
 import com.parse.LogInCallback;
@@ -38,13 +40,19 @@ public class AuthorizationView extends Activity {
 	
 	BootstrapButton facebookLogin;
 	BootstrapButton twitterLogin;
+	SignInButton googleLogin;
+	
 	ParseInstallation installation;
 	
 	public AuthorizationView view = this;
 	
 	public API api;
 	
-	AsyncTask<Void, Void, Void> twitterImg;
+	private boolean mSignInClicked;
+	private boolean mIntentInProgress;
+	private ConnectionResult mConnectionResult;
+	
+	AsyncTask<Void, Void, Void> twitterCredentials;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +80,7 @@ public class AuthorizationView extends Activity {
 			
 			facebookLogin = (BootstrapButton) findViewById(R.id.login_facebook);
 			twitterLogin = (BootstrapButton) findViewById(R.id.login_twitter);
+			googleLogin = (SignInButton) findViewById(R.id.login_google_plus);
 			
 			twitterLogin.setOnClickListener(new View.OnClickListener() {
 				
@@ -86,6 +95,14 @@ public class AuthorizationView extends Activity {
 				@Override
 				public void onClick(View v) {
 					facebookLogin();
+				}
+			});
+			
+			googleLogin.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					googlePlusLogin();
 				}
 			});
 		}
@@ -113,6 +130,10 @@ public class AuthorizationView extends Activity {
 		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 	}
 	
+	private void googlePlusLogin() {
+		Log.d("Google button clicked", "Google button clicked");
+	}
+	
 	private void twitterLogin() {
 		ParseTwitterUtils.logIn(this, new LogInCallback() {
 			
@@ -124,7 +145,7 @@ public class AuthorizationView extends Activity {
 					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
 					editor.putString("twitterObjectId", user.getObjectId());
 					editor.commit();
-					twitterImg = new GetTwitterCredentials(view, ParseTwitterUtils.getTwitter().getScreenName(), user).execute();
+					twitterCredentials = new GetTwitterCredentials(view, ParseTwitterUtils.getTwitter().getScreenName(), user).execute();
 					startActivity(new Intent(AuthorizationView.this, RouteList.class));
 				}
 			}
@@ -173,6 +194,17 @@ public class AuthorizationView extends Activity {
 					}
 				}
 			});
+		}
+	}
+	
+	private void resolveSignInError() {
+		if (mConnectionResult.hasResolution()) {
+			try {
+				mIntentInProgress = true;
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 	}
 }
