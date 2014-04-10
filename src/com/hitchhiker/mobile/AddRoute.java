@@ -129,15 +129,8 @@ public class AddRoute extends Activity {
 					route.put("locationFrom", getLocationFrom());
 					route.put("locationTo", getLocationTo());
 					route.put("user", ParseUser.getCurrentUser());
-					
-					if (prefs.contains("facebookObjectId")) {
-						route.put("authorName", userFacebookName());
-						route.put("userProfileImage", 
-								"https://graph.facebook.com/"+userFacebookId()+"/picture?height=73&type=normal&width=73");
-					} else if (prefs.contains("twitterObjectId")) {
-						route.put("authorName", userTwitterName());
-						route.put("userProfileImage", userTwitterImage());
-					}
+					route.put("authorName", getUserName());
+					route.put("userProfileImage", getUserImage());
 					
 					route.saveInBackground();
 					
@@ -245,13 +238,13 @@ public class AddRoute extends Activity {
 		return null;
 	}
 	
-	private String userTwitterName() {
+	private String getUserName() {
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		if (currentUser.get("profile") != null) {
 			JSONObject userProfile = currentUser.getJSONObject("profile");
 			try {
-				if (userProfile.getString("twitterName") != null) {
-					return userProfile.getString("twitterName").toString();
+				if (userProfile.getString("userName") != null) {
+					return userProfile.getString("userName").toString();
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -260,13 +253,13 @@ public class AddRoute extends Activity {
 		return null;
 	}
 	
-	private String userTwitterImage() {
+	private String getUserImage() {
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		if (currentUser.get("profile") != null) {
 			JSONObject userProfile = currentUser.getJSONObject("profile");
 			try {
-				if (userProfile.getString("twitterImage") != null) {
-					return userProfile.getString("twitterImage").toString();
+				if (userProfile.getString("userImage") != null) {
+					return userProfile.getString("userImage").toString();
 				}
 			} catch (Exception e) {
 				// TODO: handle exception

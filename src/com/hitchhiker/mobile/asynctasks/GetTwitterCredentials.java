@@ -33,8 +33,9 @@ public class GetTwitterCredentials extends AsyncTask<Void, Void, Void> {
 	protected void onPostExecute(Void result) {
 		JSONObject userProfile = new JSONObject();
 		try {
-			userProfile.put("twitterName", view.api.getTwitterName());
-			userProfile.put("twitterImage", view.api.getTwitterImage());
+			userProfile.put("userName", view.api.getTwitterName());
+			String image = view.api.getTwitterImage().replace("normal", "bigger");
+			userProfile.put("userImage", image);
 			user.put("profile", userProfile);
 			user.saveInBackground();
 		} catch (Exception e) {

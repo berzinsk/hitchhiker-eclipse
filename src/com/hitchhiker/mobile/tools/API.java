@@ -77,6 +77,7 @@ public class API {
 	public double location(String address) {
 		setStreet(null);
 		setStreetNumber(null);
+		setCity(null);
 		
 		String formatedAddress = address.replace(" ", "%20");
 		String formatedAddress2 = formatedAddress.replaceAll("\"|\"", "");
