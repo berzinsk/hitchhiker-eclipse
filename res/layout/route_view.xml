@@ -36,28 +36,28 @@
         		android:layout_width="wrap_content"
         		android:layout_height="wrap_content"
         		android:layout_marginTop="20dp"
-        		android:text="@string/from" />
+        		android:text="No: " />
             
             <TextView
         		android:id="@+id/departure_date_view"
         		android:layout_width="wrap_content"
         		android:layout_height="wrap_content"
         		android:layout_marginTop="40dp"
-        		android:text="@string/date" />
+        		android:text="Datums: " />
             
             <TextView
         		android:id="@+id/seats_view"
         		android:layout_width="wrap_content"
         		android:layout_height="wrap_content"
         		android:layout_marginTop="40dp"
-        		android:text="@string/seats" />
+        		android:text="Brīvas vietas: " />
             
             <Button
         		android:id="@+id/join"
         		android:layout_width="wrap_content"
         		android:layout_height="wrap_content"
         		android:layout_marginTop="30dp"
-        		android:text="@string/join" />
+        		android:text="Pievienoties" />
             
         </LinearLayout>
         
@@ -73,21 +73,28 @@
         		android:layout_width="wrap_content"
         		android:layout_height="wrap_content"
         		android:layout_marginTop="20dp"
-        		android:text="@string/to" />
+        		android:text="Uz: " />
             
             <TextView
         		android:id="@+id/departure_time_view"
         		android:layout_width="wrap_content"
         		android:layout_height="wrap_content"
         		android:layout_marginTop="40dp"
-        		android:text="@string/time" />
+        		android:text="Laiks: " />
             
             <TextView
         		android:id="@+id/price_view"
         		android:layout_width="wrap_content"
         		android:layout_height="wrap_content"
         		android:layout_marginTop="40dp"
-        		android:text="@string/price_tag" />
+        		android:text="Cena: " />
+
+            <Button
+                android:id="@+id/button_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Apmaksāt" />
             
         </LinearLayout>
         

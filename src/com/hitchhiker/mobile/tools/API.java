@@ -189,7 +189,7 @@ public class API {
 				setTwitterImage(data.getString("profile_image_url_https"));
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 	
@@ -264,6 +264,20 @@ public class API {
 				route.setLongitudeTo(data.getDouble("lngTo"));
 			}
 			
+			List<String> paidPassengers = new ArrayList<String>();
+			JSONArray paidObject = null;
+			if (data.has("paidPassengers")) {
+				paidObject = data.getJSONArray("paidPassengers");
+				Log.d("has paid passengers", "has paid passengers");
+				for (int i = 0; i < paidObject.length(); i++) {
+					paidPassengers.add(paidObject.get(i).toString());
+				}
+				if (paidPassengers != null) {
+					Log.d("irrrrrrrrrrrrr", "irrrrrrrrrr");
+					route.setPaidPassengers(paidPassengers);
+				}
+			}
+			
 			List<String> passengers = new ArrayList<String>();
 			JSONArray object = null;
 			if (data.has("passengers")) {
@@ -324,7 +338,7 @@ public class API {
 				HttpResponse response = httpclient.execute(httpget);
 				entity = response.getEntity();
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 			
 			if (entity != null) {
@@ -341,7 +355,7 @@ public class API {
 					
 					reader.close();
 				} catch (Exception e) {
-					// TODO: handle exception
+					e.printStackTrace();
 				} finally {
 					inputstream.close();
 				}
@@ -350,7 +364,7 @@ public class API {
 			}
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		String result = stringBuilder.toString().trim();
@@ -371,7 +385,7 @@ public class API {
 				HttpResponse response = client.execute(verifyGet);
 				entity = response.getEntity();
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 			
 			if (entity != null) {
@@ -388,7 +402,7 @@ public class API {
 					
 					reader.close();
 				} catch (Exception e) {
-					// TODO: handle exception
+					e.printStackTrace();
 				} finally {
 					inputstream.close();
 				}
@@ -396,7 +410,7 @@ public class API {
 				client.getConnectionManager().shutdown();
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		String result = stringBuilder.toString().trim();
@@ -421,7 +435,7 @@ public class API {
 				HttpResponse response = httpclient.execute(httpget);
 				entity = response.getEntity();
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 			
 			if (entity != null) {
@@ -438,7 +452,7 @@ public class API {
 					
 					reader.close();
 				} catch (Exception e) {
-					// TODO: handle exception
+					e.printStackTrace();
 				} finally {
 					inputstream.close();
 				}
@@ -447,7 +461,7 @@ public class API {
 			}
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		String result = stringBuilder.toString().trim();
@@ -490,7 +504,7 @@ public class API {
 					}
 					reader.close();
 				} catch (Exception e) {
-					// TODO: handle exception
+					e.printStackTrace();
 				} finally {
 					inputstream.close();
 				}
@@ -498,7 +512,7 @@ public class API {
 				httpclient.getConnectionManager().shutdown();
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		String result = stringBuilder.toString().trim();
@@ -545,7 +559,7 @@ public class API {
 				resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		return resultList;

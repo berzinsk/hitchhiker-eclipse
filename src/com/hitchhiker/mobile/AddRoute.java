@@ -1,6 +1,8 @@
 package com.hitchhiker.mobile;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.json.JSONObject;
 
@@ -13,6 +15,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -49,23 +52,17 @@ public class AddRoute extends Activity {
 	String departureTime;
 	String departureDate;
 	
-	private ImageView addRoteFromImage;
 	private ImageView addDateImage;
-	private ImageView addSeatsImage;
-	private ImageView addNotesImage;
-	private ImageView addRouteToImage;
 	private ImageView addTimeImage;
-	private ImageView addPriceImage;
-	private ImageView addStopsImage;
 	
 	private AutoCompleteTextView routeFromText;
 	private TextView dateText;
 	private EditText seatsText;
-	private EditText notesText;
+	private EditText paypalText;
 	private AutoCompleteTextView routeToText;
 	private TextView timeText;
 	private EditText priceText;
-	private EditText stopsText;
+	private EditText numberText;
 	
 	Button postButton;
 	Button cancelButton;
@@ -102,7 +99,7 @@ public class AddRoute extends Activity {
 		initializeFields();
 		
 		postButton = (Button) findViewById(R.id.button_post);
-		final SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
+		
 		postButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -131,6 +128,12 @@ public class AddRoute extends Activity {
 					route.put("user", ParseUser.getCurrentUser());
 					route.put("authorName", getUserName());
 					route.put("userProfileImage", getUserImage());
+					route.put("hasPassengers", false);
+					saveAccountInformation(paypalText.getText().toString(), numberText.getText().toString());
+					
+					Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
+					editor.putString("paypal", paypalText.getText().toString());
+					editor.putString("number", numberText.getText().toString()).commit();
 					
 					route.saveInBackground();
 					
@@ -166,78 +169,6 @@ public class AddRoute extends Activity {
 		});
 	}
 	
-	private void buildDialog(String hint, final TextView textView, boolean numbers, boolean map) {
-		final Dialog dialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
-		dialog.setContentView(R.layout.custom_dialog);
-		
-		if (map == true) {
-			
-		}
-		
-		final EditText input = (EditText) dialog.findViewById(R.id.dialog_edit_text);
-		input.setHint(hint);
-		
-		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-		
-		if (numbers == true) {
-			input.setInputType(InputType.TYPE_CLASS_NUMBER);
-		}
-		
-		input.requestFocus();
-		
-		Button dialogButtonAdd = (Button) dialog.findViewById(R.id.dialog_button_add);
-		Button dialogButtonCancel = (Button) dialog.findViewById(R.id.dialog_button_cancel);
-		
-		dialogButtonAdd.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				textView.setText(input.getText().toString());
-				dialog.dismiss();
-			}
-		});
-		
-		dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-		
-		dialog.show();
-	}
-	
-	private String userFacebookId() {
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		if (currentUser.get("profile") != null) {
-			JSONObject userProfile = currentUser.getJSONObject("profile");
-			try {
-				if (userProfile.getString("facebookId") != null) {
-					return userProfile.getString("facebookId").toString();
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
-		return null;
-	}
-	
-	private String userFacebookName() {
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		if (currentUser.get("profile") != null) {
-			JSONObject userProfile = currentUser.getJSONObject("profile");
-			try {
-				if (userProfile.getString("name") != null) {
-					return userProfile.getString("name").toString();
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
-		return null;
-	}
-	
 	private String getUserName() {
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		if (currentUser.get("profile") != null) {
@@ -251,6 +182,17 @@ public class AddRoute extends Activity {
 			}
 		}
 		return null;
+	}
+	
+	private void saveAccountInformation(String email, String phoneNumber) {
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if (currentUser.get("paypalAccount") == null) {
+			currentUser.put("paypalAccount", email);
+		}
+		if (currentUser.get("phoneNumber") == null) {
+			currentUser.put("phoneNumber", phoneNumber);
+		}
+		currentUser.saveInBackground();
 	}
 	
 	private String getUserImage() {
@@ -304,8 +246,9 @@ public class AddRoute extends Activity {
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
-			setDepartureDate(String.valueOf(dayOfMonth + "." + convert((monthOfYear + 1)) + "." + year));
-			dateText.setText(String.valueOf(dayOfMonth + "." + convert((monthOfYear + 1)) + "." + year));
+			setDepartureDate(String.valueOf(convert(dayOfMonth) + "." + convert((monthOfYear + 1)) + "." + year));
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			dateText.setText(String.valueOf(convert(dayOfMonth) + "." + convert((monthOfYear + 1)) + "." + year));
 		}
 	};
 
@@ -318,19 +261,24 @@ public class AddRoute extends Activity {
 	
 	private void initializeFields() {
 		
-		addRoteFromImage = (ImageView) findViewById(R.id.add_from_image);
 		addDateImage = (ImageView) findViewById(R.id.add_date_image);
-		addSeatsImage = (ImageView) findViewById(R.id.add_seats_image);
-		addNotesImage = (ImageView) findViewById(R.id.add_notes_image);
-		addRouteToImage = (ImageView) findViewById(R.id.add_to_image);
 		addTimeImage = (ImageView) findViewById(R.id.add_time_image);
-		addPriceImage = (ImageView) findViewById(R.id.add_price_image);
-		addStopsImage = (ImageView) findViewById(R.id.add_stops_image);
 		
 		dateText = (TextView) findViewById(R.id.add_date_result);
 		timeText = (TextView) findViewById(R.id.add_time_result);
 		priceText = (EditText) findViewById(R.id.price_edittext);
 		seatsText = (EditText) findViewById(R.id.seats_eidttext);
+		SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
+		
+		paypalText = (EditText) findViewById(R.id.paypal_field);
+		if (prefs.contains("paypal")) {
+			paypalText.setText(prefs.getString("paypal", ""));
+		}
+		
+		numberText = (EditText) findViewById(R.id.number_field);
+		if (prefs.contains("number")) {
+			numberText.setText(prefs.getString("number", ""));
+		}
 		
 		routeFromText = (AutoCompleteTextView) findViewById(R.id.route_from_edittext);
 		routeFromText.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item));

@@ -14,35 +14,13 @@
         android:background="@drawable/popup_background"
         android:padding="20dp" >
 
-        <EditText
-            android:id="@+id/dialog_edit_text"
+        <ListView
+            android:id="@+id/parid_customer_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:singleLine="true"
-            android:ems="10" >
+            android:layout_centerHorizontal="true" >
 
-            <requestFocus />
-        </EditText>
-
-        <Button
-            android:id="@+id/dialog_button_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/dialog_edit_text"
-            android:layout_below="@+id/dialog_edit_text"
-            android:layout_marginTop="15dp"
-            android:text="Cancel" />
-
-        <Button
-            android:id="@+id/dialog_button_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/dialog_button_cancel"
-            android:layout_alignRight="@+id/dialog_edit_text"
-            android:text="Add" />
+        </ListView>
     </RelativeLayout>
  
 </RelativeLayout>

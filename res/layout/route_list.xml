@@ -15,7 +15,7 @@
         	android:id="@+id/addRoute"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/add_route"
+        	android:text="Pievienot braucienu"
         	android:layout_alignParentRight="true"
         	androidbootstrap:roundedCorners="true"
         	androidbootstrap:size="default"

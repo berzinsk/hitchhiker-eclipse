@@ -1,5 +1,6 @@
 package com.hitchhiker.mobile.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Route {
@@ -15,6 +16,7 @@ public class Route {
 	private String departureDate;
 	private int availableSeats;
 	private List<String> passengers;
+	private List<String> paidPassengers;
 	private double latFrom;
 	private double lngFrom;
 	private double latTo;
@@ -214,5 +216,13 @@ public class Route {
 
 	public void setStreetTo(String streetTo) {
 		this.streetTo = streetTo;
+	}
+
+	public List<String> getPaidPassengers() {
+		return paidPassengers;
+	}
+
+	public void setPaidPassengers(List<String> paidPassengers) {
+		this.paidPassengers = paidPassengers;
 	}
 }
