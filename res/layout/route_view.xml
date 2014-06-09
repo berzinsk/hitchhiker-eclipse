@@ -56,6 +56,10 @@
         		android:id="@+id/join"
         		android:layout_width="wrap_content"
         		android:layout_height="wrap_content"
+        		android:background="@drawable/cancel_button"
+                android:textColor="#fff"
+                android:paddingLeft="15dp"
+            	android:paddingRight="15dp"
         		android:layout_marginTop="30dp"
         		android:text="Pievienoties" />
             
@@ -93,8 +97,24 @@
                 android:id="@+id/button_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/cancel_button"
+                android:textColor="#fff"
+                android:paddingLeft="15dp"
+            	android:paddingRight="15dp"
                 android:layout_marginTop="30dp"
+                android:visibility="gone"
                 android:text="Apmaksāt" />
+
+            <TextView
+                android:id="@+id/paid_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:textColor="#770000"
+                android:visibility="gone"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:text="Jūs esat apmaksājis braucienu" />
             
         </LinearLayout>
         

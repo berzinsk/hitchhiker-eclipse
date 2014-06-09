@@ -44,6 +44,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.MutableContextWrapper;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Menu;
@@ -52,6 +54,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RouteView extends Activity {
 	private static final int PAYPAL_CODE = 9911;
@@ -63,6 +66,7 @@ public class RouteView extends Activity {
 	public ProgressDialog progressDialog;
 	private Button joinRoute;
 	private Button buttonPay;
+	private TextView paid_text;
 	
 	private Double routeFromLat;
 	private Double routeFromLng;
@@ -90,6 +94,12 @@ public class RouteView extends Activity {
 		progressDialog = ProgressDialog.show(RouteView.this, null, getResources().getString(R.string.loading), true);
 		
 		route = ((Hitchhiker) this.getApplicationContext()).getRoute();
+		paid_text = (TextView) findViewById(R.id.paid_text);
+		Log.d("Routeee", this.route.getId());
+		SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
+		if (prefs.contains(this.route.getId())) {
+			paid_text.setVisibility(0);
+		}
 		initPaypalLibrary();
 		
 		getRouteDetails = new GetRouteDetails(this).execute();
@@ -165,7 +175,7 @@ public class RouteView extends Activity {
 		buttonPay = (Button) findViewById(R.id.button_pay);
 		if (getRouteUserId().equals(ParseUser.getCurrentUser().getObjectId())) {
 			Log.d("ir", "ir");
-			buttonPay.setVisibility(4);
+			buttonPay.setVisibility(8);
 		} else {
 			buttonPay.setOnClickListener(new View.OnClickListener() {
 				
@@ -179,7 +189,7 @@ public class RouteView extends Activity {
 		if (getRouteUserId().equals(ParseUser.getCurrentUser().getObjectId())) {
 			
 			if (route.getPaidPassengers() != null && !route.getPaidPassengers().isEmpty()) {
-				joinRoute.setText("Paid passengers");
+				joinRoute.setText("Samaksājuši");
 				joinRoute.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
@@ -196,7 +206,11 @@ public class RouteView extends Activity {
 				if (!route.getPassengers().isEmpty()) {
 					for (int i = 0; i < route.getPassengers().size(); i++) {
 						if (route.getPassengers().get(i).contains(ParseUser.getCurrentUser().getObjectId())) {
-							joinRoute.setText(getResources().getString(R.string.decline));
+							joinRoute.setText("Atteikties");
+							SharedPreferences prefs = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE);
+							if (!prefs.contains(this.route.getId())) {
+								buttonPay.setVisibility(0);
+							}
 							joinRoute.setOnClickListener(new View.OnClickListener() {
 								
 								@Override
@@ -205,7 +219,7 @@ public class RouteView extends Activity {
 								}
 							});
 						} else {
-							joinRoute.setText(getResources().getString(R.string.join));
+							joinRoute.setText("Pievienoties");
 							joinRoute.setOnClickListener(new View.OnClickListener() {
 								
 								@Override
@@ -216,7 +230,7 @@ public class RouteView extends Activity {
 						}
 					}
 				} else {
-					joinRoute.setText(getResources().getString(R.string.join));
+					joinRoute.setText("Pievienoties");
 					joinRoute.setOnClickListener(new View.OnClickListener() {
 						
 						@Override
@@ -230,23 +244,23 @@ public class RouteView extends Activity {
 		}
 		
 		TextView routeFrom = (TextView) findViewById(R.id.route_from_view);
-		routeFrom.setText(getResources().getString(R.string.from) + route.getRouteFrom());
+		routeFrom.setText("No: " + route.getRouteFrom());
 		
 		TextView routeTo = (TextView) findViewById(R.id.route_to_view);
-		routeTo.setText(getResources().getString(R.string.to) + route.getRouteTo());
+		routeTo.setText("Uz: " + route.getRouteTo());
 		
 		TextView price = (TextView) findViewById(R.id.price_view);
 		finalPrice = route.getPrice();
-		price.setText(getResources().getString(R.string.price_tag) + route.getPrice());
+		price.setText("Cena: " + route.getPrice() + " Euro");
 		
 		TextView departureTime = (TextView) findViewById(R.id.departure_time_view);
-		departureTime.setText(getResources().getString(R.string.time) + route.getDepartureTime());
+		departureTime.setText("Laiks: " + route.getDepartureTime());
 		
 		TextView departureDate = (TextView) findViewById(R.id.departure_date_view);
-		departureDate.setText(getResources().getString(R.string.date) + route.getDepartureDate());
+		departureDate.setText("Datums: " + route.getDepartureDate());
 		
 		TextView availableSeats = (TextView) findViewById(R.id.seats_view);
-		availableSeats.setText(getResources().getString(R.string.seats) + route.getAvailableSeats());
+		availableSeats.setText("Vietas: " + route.getAvailableSeats());
 		
 		getPoly = new GetPolyline(this, makeRouteUrl()).execute();
 	}
@@ -411,9 +425,9 @@ public class RouteView extends Activity {
 		push.setQuery(pushQuery);
 		
 		if (join && name != null) {
-			push.setMessage(name + " just joined your route.");
+			push.setMessage(name + " pievienojās braucienam.");
 		} else if (!join && name != null) {
-			push.setMessage(name + " just abandoned the route.");
+			push.setMessage(name + " atteicās no brauciena.");
 		}
 		
 		push.sendInBackground();
@@ -532,7 +546,13 @@ public class RouteView extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == PAYPAL_CODE) {
+			Log.d("loog", this.route.getId());
+			Editor editor = getSharedPreferences("com.hitchhiker.mobile", Context.MODE_PRIVATE).edit();
+			editor.putBoolean(this.route.getId(), true).commit();
 			Log.d("success", "success");
+			Toast.makeText(this, "Jūs esat apmaksājis braucienu.", Toast.LENGTH_LONG).show();
+			buttonPay.setVisibility(8);
+			paid_text.setVisibility(0);
 			addPaidPassengers();
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);

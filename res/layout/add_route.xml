@@ -131,7 +131,7 @@
                     android:layout_marginRight="5dp"
                     android:textColor="#fff"
                     android:textSize="18dp"
-                    android:text="BRĪVAS VIETAS:" />
+                    android:text="VIETAS:" />
 
                 <EditText
                     android:id="@+id/seats_eidttext"
@@ -371,7 +371,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/cancel_button"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="40dp"
+            android:layout_marginRight="31dp"
             android:background="@drawable/post_button"
             android:paddingBottom="15dp"
             android:paddingLeft="40dp"
